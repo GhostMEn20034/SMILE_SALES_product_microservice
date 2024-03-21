@@ -22,7 +22,7 @@ class _Decimal128PydanticAnnotation:
                 core_schema.is_instance_schema(Decimal128),
                 core_schema.no_info_plain_validator_function(validate_from_decimal),
             ],
-            serialization=core_schema.plain_serializer_function_ser_schema(lambda number: str(number)),
+            serialization=core_schema.plain_serializer_function_ser_schema(lambda number: float(str(number))),
         )
 
 PyDecimal128 = Annotated[

@@ -1,6 +1,6 @@
 from pymongo.results import InsertOneResult, InsertManyResult, UpdateResult, DeleteResult
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Tuple
 
 
 class BaseRepository:
@@ -26,12 +26,13 @@ class BaseRepository:
         return document
 
     async def get_document_list(self, filters: Optional[Dict] = None, projection: Optional[Dict] = None,
-                                sort: Optional[Dict] = None, skip: int = 0, limit: int = 0, **kwargs) -> List[Dict]:
+                                sort: Optional[List[Tuple]] = None, skip: int = 0, limit: int = 0, **kwargs) -> List[
+        Dict]:
         """
         Returns a list of documents from the database based on the given filters.
         :param filters: A dictionary of filters to apply to the query.
         :param projection: A dictionary of fields which will be returned in result
-        :param sort: A dictionary of fields by which the results will be sorted.
+        :param sort: A List of tuples with field, sort direction pairs by which the results will be sorted.
         :param skip: The number of documents to skip. (Also it's called OFFSET in Relational DBs)
         :param limit: The number of documents to return in result.
         :param kwargs: Any additional query parameters such as session etc.
@@ -43,7 +44,7 @@ class BaseRepository:
             projection = {}
 
         if sort is None:
-            sort = {}
+            sort = []
 
         document_list = await self.db[self.collection_name] \
             .find(filters, projection, **kwargs).skip(skip).limit(limit).sort(sort).to_list(length=None)
@@ -130,3 +131,13 @@ class BaseRepository:
         deleted_documents = await self.db[self.collection_name].delete_many(filter=filters, **kwargs)
         return deleted_documents
 
+    async def is_document_exists(self, filters: Optional[Dict] = None, **kwargs) -> bool:
+        """
+        Checks if a document matching the given filters exists in the database.
+
+        :param filters: A dictionary of filters to apply to the query.
+        :param kwargs: Any additional query parameters such as session etc.
+        :return: True if at least one document matching the filters exists, False otherwise.
+        """
+        count = await self.db[self.collection_name].count_documents(filters, **kwargs)
+        return count > 0

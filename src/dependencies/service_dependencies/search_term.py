@@ -4,7 +4,7 @@ from src.repositories.search_term import SearchTermRepository
 
 
 async def get_search_term_service() -> SearchTermService:
-    search_term_repository = SearchTermRepository(db, "search_terms")
+    search_term_repository = SearchTermRepository(db)
     search_term_service = SearchTermService(
         search_term_repository=search_term_repository
     )
