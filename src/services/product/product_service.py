@@ -1,31 +1,29 @@
 from typing import Dict, List
-
 from bson import ObjectId
 from fastapi import HTTPException
 
-from src.repositories.product import ProductRepository
-from src.schemes.product.filters import ProductFilters
-from .filter_data_adapter import FilterDataAdapter
+from src.services.product.product_data_adapter import FilterDataAdapter
 from .query_builders.query_filter_builder import ProductQueryFiltersBuilder
 from .query_builders.search_query_builder import ProductSearchQueryBuilder
+from src.schemes.product.filters import ProductFilters, ProductPaginationSettings
+from src.schemes.product.get import ProductListResponse, FacetValuesResponse
+from src.repositories.product import ProductRepository
 from src.repositories.category import CategoryRepository
 from src.repositories.facet import FacetRepository
 from src.param_classes.product.product_facet_params import ProductFacetParams
+from src.services.search_term.search_term_service import SearchTermService
 
 
 class ProductService:
-    def __init__(self, product_repository: ProductRepository,
-                 category_repository: CategoryRepository, facet_repository: FacetRepository):
+    def __init__(self, product_repository: ProductRepository, category_repository: CategoryRepository,
+                 facet_repository: FacetRepository, search_term_service: SearchTermService):
 
         self.product_repository = product_repository
         self.category_repository = category_repository
         self.facet_repository = facet_repository
+        self.search_term_service = search_term_service
 
-    # async def get_filtered_products(self, filters: ProductFilters):
-    #     filter_data_adapter = FilterDataAdapter(filter_data=filters)
-    #     filters_dto = filter_data_adapter.get_product_filters_dto()
-
-    async def get_filtered_facet_values(self, filters: ProductFilters):
+    async def get_filtered_facet_values(self, filters: ProductFilters) -> FacetValuesResponse:
         # Convert all datatypes in product filters suitable for mongodb
         filter_data_adapter = FilterDataAdapter(filter_data=filters)
         filters_dto = filter_data_adapter.get_product_filters_dto()
@@ -68,6 +66,33 @@ class ProductService:
         category_relations = await self.category_repository.get_category_ancestors_and_children(current_category,
                                                                                                 auto_defined)
 
-        return {"facet_values": facet_values_result.facet_values,
-                "price_range": facet_values_result.price_range_facet,
-                "categories": category_relations, }
+        return FacetValuesResponse(facet_values=facet_values_result.facet_values,
+                                   price_range=facet_values_result.price_range_facet,
+                                   categories=category_relations)
+
+    async def get_product_list(self, filters: ProductFilters,
+                               pagination_settings: ProductPaginationSettings) -> ProductListResponse:
+        # Convert all datatypes in product filters suitable for mongodb
+        filter_data_adapter = FilterDataAdapter(filter_data=filters)
+        filters_dto = filter_data_adapter.get_product_filters_dto()
+
+        query_filters_builder = ProductQueryFiltersBuilder(product_filters_dto=filters_dto)
+        search_query_builder = ProductSearchQueryBuilder(query_filters_builder)
+
+        if filters_dto.q:
+            await self.search_term_service.increment_searched_count(filters_dto.q)
+
+        if filters_dto.category:
+            # If user specified the category, then get all child categories by which products will be filtered
+            category_children = await self.category_repository \
+                .get_category_children(filters_dto.category)
+            category_ids = [filters_dto.category, ]
+            category_ids.extend([category["_id"] for category in category_children])
+        else:
+            # If user did not specify the category, then no need to filter products by categories
+            category_ids = []
+
+        products_data = await self.product_repository \
+            .get_filtered_products(search_query_builder, pagination_settings, category_ids)
+
+        return ProductListResponse(**products_data)

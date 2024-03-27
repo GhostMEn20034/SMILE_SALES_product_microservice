@@ -3,7 +3,7 @@ from bson import ObjectId
 
 def get_category_relations(category_id: ObjectId, collection_name: str, auto_defined: bool = False):
     """
-    Returns a pipeline to get category's children and ancestors
+    Returns a pipeline to get category's children on 1 level deeper and ancestors
     :param category_id: ID of the category to get children and ancestors.
     :param collection_name: Name of the MongoDb collection to work with categories.
     :param auto_defined: Defines whether current category is defined automatically or specified manually.
@@ -63,6 +63,31 @@ def get_category_relations(category_id: ObjectId, collection_name: str, auto_def
                 "ancestors": {"$arrayElemAt": ["$ancestors.ancestors", 0]},
                 "children": {"$arrayElemAt": ["$children.children", 0]}
             }
+        }
+    ]
+
+    return pipeline
+
+
+def get_category_children_pipeline(category_id: ObjectId, collection_name: str):
+    """
+    Pipeline for getting all category's children
+    """
+    pipeline = [
+        {"$match": {"_id": category_id}},
+        {
+            "$graphLookup": {
+                "from": collection_name,
+                "startWith": "$_id",
+                "connectFromField": "_id",
+                "connectToField": "parent_id",
+                "as": "children",
+                "depthField": "depth",
+            }
+        },
+        {"$unwind": "$children"},
+        {
+            "$replaceRoot": {"newRoot": "$children"}
         }
     ]
 

@@ -7,9 +7,13 @@ class SearchTermService:
 
     async def find_search_terms_by_name(self, query: str):
         search_terms = await self.search_term_repository.find_search_terms_by_name(query)
-
-        if len(query.strip()) > 0:
-            await self.search_term_repository \
-                .update_one_document({"name": query}, {"$inc": {"search_count": 1}})
-
         return search_terms
+
+    async def increment_searched_count(self, search_term: str):
+        """
+        Increment the search term's "search_count" field by 1
+        """
+        if search_term.strip():
+            await self.search_term_repository.update_one_document({"name": search_term.strip()},
+                                                                  {"$inc": {"search_count": 1}})
+

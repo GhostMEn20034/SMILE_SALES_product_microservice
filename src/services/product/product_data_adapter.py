@@ -7,7 +7,7 @@ from src.schemes.product.dto.filters import ProductFiltersDto
 
 class FilterDataAdapter:
     """
-    Adapts filters, so MongoDB can use these filters for queries
+    Adapts product filters, so MongoDB can use these filters for queries
     """
     def __init__(self, filter_data: ProductFilters):
         self.filter_data = filter_data
@@ -37,6 +37,3 @@ class FilterDataAdapter:
             q=self.filter_data.q,
             chosen_facets=chosen_facets,
         )
-
-
-

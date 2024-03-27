@@ -8,6 +8,6 @@ class Settings(BaseSettings):
     atlas_search_product_index_name: constr(strip_whitespace=True) # A name of atlas search index to search products
     atlas_search_search_terms_index_name: constr(strip_whitespace=True) # A name
     allowed_origins: List[constr(strip_whitespace=True)]
-    relevance_threshold: confloat(ge=0, le=1) # Determines minimum relevance score of search item
+    relevance_threshold: confloat(ge=0, le=1) # Determines minimum relevance score of search item to be not excluded
 
 settings = Settings()
