@@ -20,6 +20,7 @@ class FacetValuesResponse(BaseModel):
 class ProductListResponse(BaseModel):
     items: List[ProductListItem] = []
     count: conint(ge=0) = 0
+    page_count: conint(ge=0) = 1
 
     class Config:
         populate_by_name = True

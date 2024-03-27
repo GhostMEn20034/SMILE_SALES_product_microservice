@@ -1,5 +1,5 @@
+from math import ceil
 from typing import List
-
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
@@ -106,4 +106,12 @@ class ProductRepository(BaseRepository):
         # Retrieve the final pipeline and execute it.
         final_pipeline = search_query_builder.build_product_list_pipeline(product_list_pipeline_params)
         products_data = await self.db[self.collection_name].aggregate(final_pipeline).to_list(length=None)
-        return products_data[0] if products_data else {}
+        if not products_data:
+            return {}
+
+        result = {
+            "items": products_data[0].get("items"),
+            "count": products_data[0].get("count"),
+        }
+        result["page_count"] = ceil(result["count"] / pagination_settings.page_size)
+        return result
