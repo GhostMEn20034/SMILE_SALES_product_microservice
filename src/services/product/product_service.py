@@ -38,33 +38,36 @@ class ProductService:
             raise HTTPException(status_code=404, detail="Specified category does not exist")
 
         query_filters_builder = ProductQueryFiltersBuilder(product_filters_dto=filters_dto)
-        category_ids = []
+        search_query_builder = ProductSearchQueryBuilder(query_filters_builder)
+        facets_category_ids = []
 
         # if category id not specified in filters
         if not filters_dto.category:
             # Get filtered product count grouped by the category
             products_count: List[Dict] = await self.product_repository.get_product_count_by_category(
-                query_filters_builder)
+                search_query_builder)
             # Get category_id from each dict in list, and if there are no categories, raise HTTP 404
-            category_ids: List[ObjectId] = [product["category_id"] for product in products_count]
-            if not category_ids:
+            facets_category_ids: List[ObjectId] = [product["category_id"] for product in products_count]
+            if not facets_category_ids:
                 raise HTTPException(status_code=404, detail="No results were found with the given filters")
 
             auto_defined = True
-            current_category = category_ids[0]
+            current_category = facets_category_ids[0]
         else:
-            category_ids.append(filters_dto.category)
+            facets_category_ids.append(filters_dto.category)
 
-        # get facets with ids from category_ids list
-        facets: List[Dict] = await self.facet_repository.get_facet_codes_by_category_priority(category_ids)
-
-        search_query_builder = ProductSearchQueryBuilder(query_filters_builder)
-        product_facet_params = ProductFacetParams([facet["code"] for facet in facets], category_ids)
-        # Get all possible filtered product' facet values
-        facet_values_result = await self.product_repository.get_facet_values(search_query_builder, product_facet_params)
         # Get all category's ancestors and children
         category_relations = await self.category_repository.get_category_ancestors_and_children(current_category,
                                                                                                 auto_defined)
+        products_category_ids = facets_category_ids.copy()
+        if children := category_relations.get("all_children", []):
+            products_category_ids.extend([category["_id"] for category in children])
+
+        # get facets with ids from category_ids list
+        facets: List[Dict] = await self.facet_repository.get_facet_codes_by_category_priority(facets_category_ids)
+        product_facet_params = ProductFacetParams([facet["code"] for facet in facets], products_category_ids)
+        # Get all possible filtered product' facet values
+        facet_values_result = await self.product_repository.get_facet_values(search_query_builder, product_facet_params)
 
         return FacetValuesResponse(facet_values=facet_values_result.facet_values,
                                    price_range=facet_values_result.price_range_facet,

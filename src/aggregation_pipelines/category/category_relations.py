@@ -42,28 +42,36 @@ def get_category_relations(category_id: ObjectId, collection_name: str, auto_def
                         }
                     }
                 ],
-                "children": [
+                "all_children": [
                     {
                         "$graphLookup": {
                             "from": collection_name,
                             "startWith": "$_id",
                             "connectFromField": "_id",
                             "connectToField": "parent_id",
-                            "maxDepth": 0,
-                            "as": "children",
+                            "as": "all_children",
                             "depthField": "depth",
                         }
                     }
-                ]
+                ],
             }
         },
         {
             "$project": {
                 "current": {"$arrayElemAt": ["$current", 0]},
                 "ancestors": {"$arrayElemAt": ["$ancestors.ancestors", 0]},
-                "children": {"$arrayElemAt": ["$children.children", 0]}
+                "all_children": {"$arrayElemAt": ["$all_children.all_children", 0]},
             }
-        }
+        },
+        {"$addFields": {
+            "nearest_children": {
+                "$filter": {
+                    "input": "$all_children",
+                    "as": "child",
+                    "cond": {"$eq": ["$$child.depth", 0]}
+                }
+            }
+        }},
     ]
 
     return pipeline

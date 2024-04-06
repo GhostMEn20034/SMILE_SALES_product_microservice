@@ -10,7 +10,7 @@ class SortStatementBuilder:
         self.sort_option = sort_option
 
     @staticmethod
-    def build_price_sort_pipeline_stage(price_field_name="new_price", ascending: bool = True):
+    def build_price_sort_pipeline_stage(price_field_name="discounted_price", ascending: bool = True):
         """
         Returns pipeline stage for sorting products by price in ascending order if ascending is True,
         Otherwise it sorts products by price in descending order.

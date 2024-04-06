@@ -12,6 +12,7 @@ class ProductQueryFiltersBuilder:
     construct various query filters for a product search. These filters include
     facet filters, price range filters, and category filters.
     """
+
     def __init__(self, product_filters_dto: ProductFiltersDto):
         self.product_filters_dto = product_filters_dto
 
@@ -33,12 +34,12 @@ class ProductQueryFiltersBuilder:
         for facet_code in self.product_filters_dto.chosen_facets:
             if len(self.product_filters_dto.chosen_facets[facet_code]) > 0:
                 facet_filters.append(
-                    {"attrs": {"$elemMatch": {"$or": self.product_filters_dto.chosen_facets[facet_code]}}}
+                    {"attrs": {"$elemMatch": {"$or": self.product_filters_dto.chosen_facets[facet_code]}}},
                 )
 
         return facet_filters
 
-    def build_price_range_filter(self) -> Dict:
+    def build_price_range_filter(self, price_field_name: str = "price") -> Dict:
         """
         Builds filter to select documents with price in range from min_price to max_price
         """
@@ -52,7 +53,7 @@ class ProductQueryFiltersBuilder:
         if not price_range_filter:
             return {}
 
-        return {"price": price_range_filter}
+        return {price_field_name: price_range_filter}
 
     def build_category_filter(self):
         """

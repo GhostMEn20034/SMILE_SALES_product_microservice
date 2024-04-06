@@ -34,11 +34,11 @@ class CategoryTree(BaseModel):
 
     Attributes:
         current (CurrentTreeElement): The current category element, which may be auto-defined.
-        children (List[CategoryTreeElement]): A list of category elements that are direct descendants of the current category.
+        nearest_children (List[CategoryTreeElement]): A list of category elements that are direct descendants of the current category.
         ancestors (List[CategoryTreeElement]): A list of category elements that are direct ancestors of the current category.
     """
     current: CurrentTreeElement
-    children: List[CategoryTreeElement]
+    nearest_children: List[CategoryTreeElement]
     ancestors: List[CategoryTreeElement]
 
     class Config:

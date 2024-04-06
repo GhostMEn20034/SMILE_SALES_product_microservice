@@ -28,13 +28,13 @@ def get_search_product_pipeline(query: str, exclude_low_relevant_results: bool =
                                     "query": query.strip(),
                                     "path": "name",
                                     "slop": 20,  # Allows for some word rearrangement in the phrase.
-                                    "score": {"boost": {"value": 2}},  # Boosts the relevance score if matched.
+                                    "score": {"boost": {"value": 2.4}},  # Boosts the relevance score if matched.
                                 }},
                                 {"phrase": {
                                     "query": query.strip(),
                                     "path": "search_terms",
                                     "slop": 12,  # Allows for some word rearrangement in the phrase.
-                                    "score": {"boost": {"value": 1.2}},  # Boosts the relevance score if matched.
+                                    "score": {"boost": {"value": 1.3}},  # Boosts the relevance score if matched.
                                 }},
                             ]
                         }
@@ -56,20 +56,7 @@ def get_product_list_pipeline() -> List[Dict]:
         {"$project": {
             "name": 1,
             # The price including the discount
-            "new_price": {
-                "$cond": {
-                    # if product has discount rate
-                    "if": {"$ne": ["$discount_rate", None]},
-                    # Then, new price will: original price - (original_price * discount rate)
-                    "then": {"$round": [{"$subtract":
-                                             ["$price",
-                                              {"$multiply": ["$price", "$discount_rate"]}
-                                              ]
-                                         }, 2]},
-                    # Otherwise, new price is original price
-                    "else": "$price"
-                }
-            },
+            "discounted_price": 1,
             "original_price": "$price",
             "discount_percentage": {
                 "$cond": {
@@ -89,3 +76,20 @@ def get_product_list_pipeline() -> List[Dict]:
     ]
 
     return pipeline
+
+
+def get_discounted_price():
+    return {
+            "$cond": {
+                # if product has discount rate
+                "if": {"$ne": ["$discount_rate", None]},
+                # Then, new price will: original price - (original_price * discount rate)
+                "then": {"$round": [{"$subtract":
+                                         ["$price",
+                                          {"$multiply": ["$price", "$discount_rate"]}
+                                          ]
+                                     }, 2]},
+                # Otherwise, new price is original price
+                "else": "$price"
+            }
+    }

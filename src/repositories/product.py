@@ -6,9 +6,6 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from .base.base_repository import BaseRepository
 from src.services.product.query_builders.search_query_builder import ProductSearchQueryBuilder
 from src.aggregation_pipelines.product.product_count import get_pipeline_to_retrieve_product_count_by_category
-from src.aggregation_pipelines.product.product_list import get_search_product_pipeline
-from src.aggregation_pipelines.product.facet_values import get_pipeline_to_retrieve_price_range
-from src.services.product.query_builders.query_filter_builder import ProductQueryFiltersBuilder
 from src.param_classes.product.product_facet_params import ProductFacetParams
 from src.param_classes.product.product_list_pipeline_params import ProductListPipelineParams
 from src.schemes.product.filters import ProductPaginationSettings
@@ -19,33 +16,23 @@ class ProductRepository(BaseRepository):
     def __init__(self, db: AsyncIOMotorDatabase):
         super().__init__(db, 'products')
 
-    async def get_product_count_by_category(self, query_filters_builder: ProductQueryFiltersBuilder):
+    async def get_product_count_by_category(self, search_query_builder: ProductSearchQueryBuilder):
         """
         Return count of products by each category
         """
         # Add query filters to dict of filters
         filters = {}
-        filters.update(query_filters_builder.build_price_range_filter())
-        filters.update(query_filters_builder.build_category_filter())
-        filters.update({"is_filterable": True, "for_sale": True, "parent": False})
-        facet_filters = query_filters_builder.build_facet_filter()
-
-        if facet_filters:
-            filters.update({"$and": facet_filters})
+        filters.update(search_query_builder.build_common_filters(add_facet_filters=True))
 
         final_pipeline = []
         # Add search pipeline stage if search query in product filters dto is not None and has at least one character
-        search_query = query_filters_builder.get_search_query()
-        search_pipeline_stage = get_search_product_pipeline(search_query,
-                                                            exclude_low_relevant_results=True) if search_query else None
-        if search_pipeline_stage:
-            final_pipeline.extend(search_pipeline_stage)
-
+        final_pipeline.extend(search_query_builder.build_search_pipeline())
+        # Add discounted price field to the result
+        final_pipeline.append({"$addFields": ProductSearchQueryBuilder.get_discounted_price_field()})
         # Add filters to pipeline
         final_pipeline.append({"$match": filters})
         # Extend main pipeline by pipeline to get product count by category
         final_pipeline.extend(get_pipeline_to_retrieve_product_count_by_category())
-
         products_count = await self.db[self.collection_name].aggregate(pipeline=final_pipeline).to_list(length=None)
         return products_count
 
@@ -60,18 +47,20 @@ class ProductRepository(BaseRepository):
         final_pipeline = []
         # Add search pipeline stage if search query in product filters dto is not None and has at least one character
         final_pipeline.extend(search_query_builder.build_search_pipeline())
+        # Add discounted price field to the result
+        final_pipeline.append({"$addFields": search_query_builder.get_discounted_price_field()})
         # Add query filters to $match statement
         final_pipeline.append({"$match": filters})
 
         facet_pipelines = {}
         # Add price range facet
-        facet_pipelines.update({'price_range': get_pipeline_to_retrieve_price_range()})
+        facet_pipelines.update(search_query_builder.build_price_range_facet())
         # Get products' facet values for each facet code
         for facet_pipeline in search_query_builder.build_facet_pipelines(product_facet_params.facet_codes):
             facet_pipelines.update(facet_pipeline)
 
         # Project only 'attrs' field to reduce document fields count to reduce load on the next pipeline stage
-        final_pipeline.append({"$project": {"attrs": 1, "price": 1}})
+        final_pipeline.append({"$project": {"attrs": 1, "discounted_price": 1}})
         # Add each sub pipeline to $facet statement
         final_pipeline.append({"$facet": facet_pipelines})
 
@@ -99,6 +88,8 @@ class ProductRepository(BaseRepository):
         filter_pipeline = []
         # Add search pipeline stage if search query in product filters dto is not None and has at least one character
         filter_pipeline.extend(search_query_builder.build_search_pipeline())
+        # Add discounted price field to the result
+        filter_pipeline.append({"$addFields": search_query_builder.get_discounted_price_field()})
         # Add query filters to $match statement
         filter_pipeline.append({"$match": filters})
 

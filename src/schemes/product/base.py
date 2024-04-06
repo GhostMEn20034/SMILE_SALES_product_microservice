@@ -63,7 +63,7 @@ class PriceRangeFacet(BaseModel):
 class ProductListItem(BaseModel):
     id: PyObjectId = Field(alias="_id")
     name: constr(min_length=1)
-    new_price: PyDecimal128 = Field()
+    discounted_price: PyDecimal128 = Field()
     original_price: PyDecimal128 = Field()
     discount_percentage: Optional[PyDecimal128] = Field(default=None)
     stock: conint(ge=0)

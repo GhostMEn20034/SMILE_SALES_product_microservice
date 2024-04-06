@@ -6,7 +6,8 @@ from src.services.search_term.search_term_service import SearchTermService
 from src.schemes.search_term.get import SearchTermItem, SearchTermListFilters
 
 router = APIRouter(
-    prefix='/search'
+    prefix='/search',
+    tags=['Search Terms']
 )
 
 ServiceDep = Annotated[SearchTermService, Depends(get_search_term_service)]

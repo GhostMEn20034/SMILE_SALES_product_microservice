@@ -14,9 +14,6 @@ def get_pipeline_to_find_search_terms(query: str, limit: int = 10) -> list:
             }
         },
         {
-            "$sort": {"meta.searchScore": -1}
-        },
-        {
             "$limit": limit,
         },
         {

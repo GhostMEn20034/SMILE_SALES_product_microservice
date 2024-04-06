@@ -1,3 +1,6 @@
+from typing import Optional, Dict, List
+
+
 def get_pipeline_to_get_display_name():
     return {
         "$switch": {
@@ -112,14 +115,19 @@ def get_pipeline_to_retrieve_facet_values(code: str, match_statement: dict):
     }
 
 
-def get_pipeline_to_retrieve_price_range():
+def get_pipeline_to_retrieve_price_range(price_field_name: str = "price",
+                                         product_filters: Optional[dict] = None) -> List[Dict]:
+    final_pipeline = []
+    if product_filters is not None:
+        final_pipeline.append({
+            "$match": product_filters
+        })
 
-    facet_pipeline = [
-        {
-            "$bucketAuto": {
-                "groupBy": "$price",
-                "buckets": 1,
-            }
+    final_pipeline.append({
+        "$bucketAuto": {
+            "groupBy": f"${price_field_name}",
+            "buckets": 1,
         }
-    ]
-    return facet_pipeline
+    })
+
+    return final_pipeline
