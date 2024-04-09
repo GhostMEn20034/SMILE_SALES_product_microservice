@@ -74,21 +74,32 @@ class ProductSearchQueryBuilder:
         chosen_facet_keys = self.query_filters_builder.get_chosen_facets_keys()
         for code in facet_codes:
             current_facet_filter = None
+            # if facet code in list of chosen facet keys
             if code in chosen_facet_keys:
                 facet_filter = []
+                # Then add each chosen facet dictionary to the facet filters
                 for index, chosen_facet in enumerate(self.query_filters_builder.build_facet_filter()):
+                    # if current chosen facet code in nested iteration
+                    # is not equal to current facet code in iteration above,
+                    # then add facet filter to the list with the facet filters
                     if chosen_facet_keys.index(code) != index:
                         facet_filter.append(chosen_facet)
                     else:
+                        # Otherwise we will use this facet filter later (see on match_expression variable)
                         current_facet_filter = chosen_facet
             else:
+                # if facet code not in list of chosen facet keys
+                # then use all chosen facets for building facet filters
                 facet_filter = self.query_filters_builder.build_facet_filter()
 
-            match_statement = {"$or": [
-                {"$and": facet_filter},
-                current_facet_filter if current_facet_filter else {"$expr": False}
-            ]} if facet_filter else {}
-            yield get_pipeline_to_retrieve_facet_values(code, match_statement)
+            # Facet's match expression.
+            # To satisfy conditions, facet with the values must:
+            match_expression = {"$or": [
+                {"$and": facet_filter},  # 1) Either Matching facet filters
+                current_facet_filter \
+                if current_facet_filter else {"$expr": False} # 2) Or facet should be chosen by the user
+            ]} if facet_filter else {} # If there's no facet filter, we don't apply any facet filter to the facet.
+            yield get_pipeline_to_retrieve_facet_values(code, match_expression)
 
     def build_price_range_facet(self):
         facet_filter = self.query_filters_builder.build_facet_filter()
