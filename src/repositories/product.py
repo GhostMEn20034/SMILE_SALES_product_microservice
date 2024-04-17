@@ -56,7 +56,7 @@ class ProductRepository(BaseRepository):
         # Add price range facet
         facet_pipelines.update(search_query_builder.build_price_range_facet())
         # Get products' facet values for each facet code
-        for facet_pipeline in search_query_builder.build_facet_pipelines(product_facet_params.facet_codes):
+        for facet_pipeline in search_query_builder.build_facet_pipelines(product_facet_params.facets):
             facet_pipelines.update(facet_pipeline)
 
         # Project only 'attrs' field to reduce document fields count to reduce load on the next pipeline stage

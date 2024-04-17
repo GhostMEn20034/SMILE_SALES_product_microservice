@@ -7,11 +7,13 @@ from .query_builders.query_filter_builder import ProductQueryFiltersBuilder
 from .query_builders.search_query_builder import ProductSearchQueryBuilder
 from src.schemes.product.filters import ProductFilters, ProductPaginationSettings
 from src.schemes.product.get import ProductListResponse, FacetValuesResponse
+from src.schemes.facet.base import Facet
 from src.repositories.product import ProductRepository
 from src.repositories.category import CategoryRepository
 from src.repositories.facet import FacetRepository
 from src.param_classes.product.product_facet_params import ProductFacetParams
 from src.services.search_term.search_term_service import SearchTermService
+from ...utils.facet.facet_metadata_provider import FacetMetadataProvider
 
 
 class ProductService:
@@ -65,13 +67,17 @@ class ProductService:
 
         # get facets with ids from category_ids list
         facets: List[Dict] = await self.facet_repository.get_facet_codes_by_category_priority(facets_category_ids)
-        product_facet_params = ProductFacetParams([facet["code"] for facet in facets], products_category_ids)
+        facet_objects = [Facet(**facet) for facet in facets]
+        product_facet_params = ProductFacetParams(facet_objects, products_category_ids)
         # Get all possible filtered product' facet values
         facet_values_result = await self.product_repository.get_facet_values(search_query_builder, product_facet_params)
-
-        return FacetValuesResponse(facet_values=facet_values_result.facet_values,
-                                   price_range=facet_values_result.price_range_facet,
-                                   categories=category_relations)
+        facet_metadata_provider = FacetMetadataProvider(facet_objects)
+        return FacetValuesResponse(
+            facet_values=facet_values_result.facet_values,
+            price_range=facet_values_result.price_range_facet,
+            categories=category_relations,
+            facet_metadata=facet_metadata_provider.get_facet_metadata(),
+        )
 
     async def get_product_list(self, filters: ProductFilters,
                                pagination_settings: ProductPaginationSettings) -> ProductListResponse:

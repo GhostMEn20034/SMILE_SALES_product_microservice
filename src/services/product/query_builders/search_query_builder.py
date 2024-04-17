@@ -1,10 +1,14 @@
 from typing import List, Dict, Optional
 from bson import ObjectId
 
+from src.schemes.facet.base import Facet
 from .query_filter_builder import ProductQueryFiltersBuilder
 from src.services.product.sort_statement_builder import SortStatementBuilder
-from src.aggregation_pipelines.product.facet_values import get_pipeline_to_retrieve_facet_values, \
+from src.aggregation_pipelines.product.facet_values import (
+    get_pipeline_to_retrieve_regular_facet_values,
+    get_pipeline_to_retrieve_range_facet_values,
     get_pipeline_to_retrieve_price_range
+)
 from src.aggregation_pipelines.product.product_list import (
     get_product_list_pipeline,
     get_search_product_pipeline,
@@ -65,24 +69,24 @@ class ProductSearchQueryBuilder:
 
         return []
 
-    def build_facet_pipelines(self, facet_codes: List[str]):
+    def build_facet_pipelines(self, facets: List[Facet]):
         """
         Generates MongoDB aggregation pipelines for each facet code provided.
         These pipelines are designed to retrieve facet values while considering
         any previously chosen facets to refine the search results.
         """
         chosen_facet_keys = self.query_filters_builder.get_chosen_facets_keys()
-        for code in facet_codes:
+        for facet in facets:
             current_facet_filter = None
             # if facet code in list of chosen facet keys
-            if code in chosen_facet_keys:
+            if facet.code in chosen_facet_keys:
                 facet_filter = []
                 # Then add each chosen facet dictionary to the facet filters
                 for index, chosen_facet in enumerate(self.query_filters_builder.build_facet_filter()):
                     # if current chosen facet code in nested iteration
                     # is not equal to current facet code in iteration above,
                     # then add facet filter to the list with the facet filters
-                    if chosen_facet_keys.index(code) != index:
+                    if chosen_facet_keys.index(facet.code) != index:
                         facet_filter.append(chosen_facet)
                     else:
                         # Otherwise we will use this facet filter later (see on match_expression variable)
@@ -99,7 +103,11 @@ class ProductSearchQueryBuilder:
                 current_facet_filter \
                 if current_facet_filter else {"$expr": False} # 2) Or facet should be chosen by the user
             ]} if facet_filter else {} # If there's no facet filter, we don't apply any facet filter to the facet.
-            yield get_pipeline_to_retrieve_facet_values(code, match_expression)
+
+            if facet.is_range:
+                yield get_pipeline_to_retrieve_range_facet_values(facet, match_expression)
+            else:
+                yield get_pipeline_to_retrieve_regular_facet_values(facet, match_expression)
 
     def build_price_range_facet(self):
         facet_filter = self.query_filters_builder.build_facet_filter()

@@ -2,6 +2,7 @@ from typing import List, Optional, Dict
 from bson import ObjectId
 
 from src.schemes.product.dto.filters import ProductFiltersDto
+from .chosen_facet_filter_builder import ChosenFacetFilterBuilder
 
 
 class ProductQueryFiltersBuilder:
@@ -17,6 +18,9 @@ class ProductQueryFiltersBuilder:
         self.product_filters_dto = product_filters_dto
 
     def get_chosen_facets_keys(self) -> List[str]:
+        if self.product_filters_dto.chosen_facets is None:
+            return []
+
         return list(self.product_filters_dto.chosen_facets.keys())
 
     def get_search_query(self):
@@ -29,15 +33,8 @@ class ProductQueryFiltersBuilder:
         if self.product_filters_dto.chosen_facets is None:
             return []
 
-        facet_filters = []
-
-        for facet_code in self.product_filters_dto.chosen_facets:
-            if len(self.product_filters_dto.chosen_facets[facet_code]) > 0:
-                facet_filters.append(
-                    {"attrs": {"$elemMatch": {"$or": self.product_filters_dto.chosen_facets[facet_code]}}},
-                )
-
-        return facet_filters
+        chosen_facet_filter_builder = ChosenFacetFilterBuilder(self.product_filters_dto.chosen_facets)
+        return chosen_facet_filter_builder.build_filters()
 
     def build_price_range_filter(self, price_field_name: str = "price") -> Dict:
         """

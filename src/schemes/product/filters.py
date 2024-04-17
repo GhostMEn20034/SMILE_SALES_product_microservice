@@ -1,9 +1,12 @@
 from decimal import Decimal
 from enum import Enum
-from typing import Optional
+from typing import Optional, List, Dict
 from pydantic import condecimal, constr, Base64UrlStr, conint
 
 from src.schemes.base.pyobject_id import PyObjectId
+from src.dependencies.model_dependencies.facet_filters import get_facet_filters
+from .facet_value_filters import FacetFilterObject
+
 
 class ProductSortOptionsEnum(str, Enum):
     relevancy = "relevancy"  # The most relevant product first
@@ -16,6 +19,7 @@ class ProductFilters:
     """
     Class with parameters to filter product's facet values
     """
+
     def __init__(self,
                  min_price: Optional[condecimal(ge=Decimal("0.00"), decimal_places=2)] = None,
                  max_price: Optional[condecimal(ge=Decimal("0.00"), decimal_places=2)] = None,
@@ -26,7 +30,10 @@ class ProductFilters:
         self.max_price = max_price
         self.category = category
         self.q = q
-        self.chosen_facets = chosen_facets
+        # Validate chosen facets if they present, if not, set this field to None
+        self.chosen_facets: Optional[Dict[str, FacetFilterObject]] = get_facet_filters(
+            chosen_facets
+        ) if chosen_facets is not None else None
 
 
 class ProductPaginationSettings:

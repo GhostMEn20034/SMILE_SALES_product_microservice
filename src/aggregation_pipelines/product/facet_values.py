@@ -1,85 +1,25 @@
 from typing import Optional, Dict, List
 
-
-def get_pipeline_to_get_display_name():
-    return {
-        "$switch": {
-            "branches": [
-                # Convert integer, decimal, or double to string
-                # and concatenate it with a unit of measurement if it presents.
-                {
-                    "case": {"$in": ["$facet_type", ['decimal', 'integer']]},
-                    "then": {
-                        "$trim": {
-                            "input": {
-                                "$concat": [
-                                    {"$toString": "$_id.value"}, " ", {"$ifNull": ["$_id.unit", ""]}]
-                            }
-                        }
-                    }
-                },
-                # Since list can have only string items,
-                # and we unwind this list before switch-case, we include "list" to "case"
-                {
-                    "case": {"$in": ["$facet_type", ['string', 'list']]},
-                    "then": {
-                        "$trim": {
-                            "input": {
-                                "$concat": ["$_id.value", " ", {"$ifNull": ["$_id.unit", ""]}]
-                            }}
-                    }
-                },
-                # If value is bivariate , it means is object. Concatenate value.x, " x ", value.y.
-                {
-                    "case": {"$eq": ["$facet_type", "bivariate"]},
-                    "then": {
-                        "$trim": {
-                            "input": {
-                                "$concat": [
-                                    {"$toString": "$_id.value.x"}, " x ",
-                                    {"$toString": "$_id.value.y"}, " ",
-                                    {"$ifNull": ["$_id.unit", ""]},
-                                ]
-                            }
-                        }
-                    }
-                },
-                # If value is trivariate , it means is object. Concatenate value.x, " x ", value.y, " x ", value.z
-                {
-                    "case": {"$eq": ["$facet_type", "trivariate"]},
-                    "then": {"$trim": {
-                        "input": {
-                            "$concat": [
-                                {"$toString": "$_id.value.x"}, " x ",
-                                {"$toString": "$_id.value.y"}, " x ",
-                                {"$toString": "$_id.value.z"}, " ",
-                                {"$ifNull": ["$_id.unit", ""]},
-                            ]
-                        }
-                    }
-                    }
-                },
-            ]
-        }
-    }
+from src.query_utils.product.boundary_handler import BoundaryHandler
+from src.query_utils.product.facet_values_display_name import get_facets_display_name
+from src.schemes.facet.base import Facet
+from src.config.constants import MAX_SAFE_INTEGER
 
 
-def get_pipeline_to_retrieve_facet_values(code: str, match_statement: dict):
+def get_pipeline_to_retrieve_regular_facet_values(facet: Facet, match_statement: dict) -> Dict:
     """
-    Returns the pipeline to retrieve the facet values
-    :param code: The code of the facet
+    Returns the pipeline to retrieve the regular facet's values
+    :param facet: The facet object.
     :param match_statement: The pipeline stage to filtering products from which values are given
     """
     return {
-        code: [
+        facet.code: [
             {"$match": match_statement},
             {"$unwind": "$attrs"},
             {"$unwind": "$attrs.value"},
-            {"$match": {"attrs.code": code}},
+            {"$match": {"attrs.code": facet.code}},
             {"$group": {"_id": {"code": "$attrs.code", "value": "$attrs.value", "unit": "$attrs.unit"},
-                        "name": {"$first": "$attrs.name"},
                         "facet_type": {"$first": "$attrs.type"},
-                        "explanation": {"$first": "$attrs.explanation"},
                         "count": {"$sum": 1}}
              },
 
@@ -88,9 +28,7 @@ def get_pipeline_to_retrieve_facet_values(code: str, match_statement: dict):
                 "value": "$_id.value",
                 "unit": "$_id.unit",
                 "count": 1,
-                "display_name": get_pipeline_to_get_display_name(),
-                "name": "$name",
-                "explanation": "$explanation",
+                "display_name": get_facets_display_name(facet.type),
             }},
             {"$sort": {"value": 1, "unit": 1, "code": 1}},
             {"$group": {"_id": "$_id.code",
@@ -100,17 +38,77 @@ def get_pipeline_to_retrieve_facet_values(code: str, match_statement: dict):
                             "count": "$count",
                             "display_name": "$display_name",
                         }},
-                        "name": {"$first": "$name"},
-
-                        "explanation": {"$first": "$explanation"}
-                        }},
+            }},
             {"$project": {
                 "_id": 0,
                 "code": "$_id",
-                "name": "$name",
-                "explanation": "$explanation",
-                "values": "$values"
-            }}
+                "name": facet.name,
+                "explanation": facet.explanation,
+                "is_range": {"$toBool": False},
+                "values": 1,
+            }},
+        ]
+    }
+
+
+def get_pipeline_to_retrieve_range_facet_values(facet: Facet, match_statement: dict):
+    """
+    Returns the pipeline to retrieve the range facet's values (Ranges like: from 16 to 32 GB)
+    :param facet: The facet object.
+    :param match_statement: The pipeline stage to filtering products from which values are given
+    """
+    range_values = facet.range_values
+    gte_field_to_display_name_mapping = {
+        item.gteq: item.display_name for item in range_values
+    }
+
+    gte_field_to_range_mapping = {
+        item.gteq: {"gteq": item.gteq, "ltn": item.ltn}
+        for item in range_values
+    }
+
+    boundary_items = [item.gteq for item in range_values]
+    boundary_handler = BoundaryHandler()
+
+    return {
+        facet.code: [
+            {"$match": match_statement},
+            {"$unwind": "$attrs"},
+            {"$match": {"attrs.code": facet.code}},
+            {
+                "$bucket": {
+                    "groupBy": "$attrs.value",
+                    "boundaries": [*boundary_items, MAX_SAFE_INTEGER],
+                    "default": "Other",
+                    "output": {
+                        "count": {"$sum": 1}
+                    }
+                }
+            },
+            {"$addFields": {
+                "value": boundary_handler.get_boundary_value(gte_field_to_range_mapping),
+                "display_name": boundary_handler.get_boundary_display_name(gte_field_to_display_name_mapping),
+            }},
+            {
+                "$group": {
+                    "_id": None,
+                    "values": {
+                        "$push": {
+                            "count": "$count",
+                            "value": "$value",
+                            "display_name": "$display_name",
+                        }
+                    },
+                }
+            },
+            {"$project": {
+                "_id": 0,
+                "code": facet.code,
+                "name": facet.name,
+                "is_range": {"$toBool": True},
+                "explanation": facet.explanation,
+                "values": 1,
+            }},
         ]
     }
 
