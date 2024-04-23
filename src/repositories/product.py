@@ -1,14 +1,16 @@
 from math import ceil
-from typing import List
+from typing import List, Dict
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from .base.base_repository import BaseRepository
 from src.services.product.query_builders.search_query_builder import ProductSearchQueryBuilder
+from src.services.product.query_builders.variations_query_builder import VariationsQueryBuilder
 from src.aggregation_pipelines.product.product_count import get_pipeline_to_retrieve_product_count_by_category
 from src.param_classes.product.product_facet_params import ProductFacetParams
 from src.param_classes.product.product_list_pipeline_params import ProductListPipelineParams
-from src.schemes.product.filters import ProductPaginationSettings
+from src.param_classes.product.variation_options_retrieval_params import VariationOptionsRetrievalParams
+from src.schemes.product.filters.product_list import ProductPaginationSettings
 from src.result_classes.product.repository_results import FacetValueResults
 
 
@@ -106,3 +108,34 @@ class ProductRepository(BaseRepository):
         }
         result["page_count"] = ceil(result["count"] / pagination_settings.page_size)
         return result
+
+
+    async def get_variation_options(self,
+                                    variation_options_retrieval_params: VariationOptionsRetrievalParams) -> List[Dict]:
+        variation_options_pipeline = VariationsQueryBuilder \
+            .get_query_to_retrieve_variation_options(variation_options_retrieval_params)
+
+        variation_options = await self.db[self.collection_name].aggregate(
+            pipeline=variation_options_pipeline
+        ).to_list(length=None)
+
+        if not variation_options:
+            return []
+
+        result = []
+        for key, variation_option in variation_options[0].items():
+            result.extend(variation_option)
+
+        return result
+
+    async def get_product_variations(self,
+                                     variation_options_retrieval_params: VariationOptionsRetrievalParams) -> List[Dict]:
+        variations_pipeline = VariationsQueryBuilder \
+            .get_query_to_retrieve_product_variations(variation_options_retrieval_params)
+
+        variations = await self.db[self.collection_name].aggregate(
+            pipeline=variations_pipeline
+        ).to_list(length=None)
+
+        return variations
+

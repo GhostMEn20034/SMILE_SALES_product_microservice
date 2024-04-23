@@ -1,4 +1,9 @@
-def get_facets_display_name(facet_type: str):
+def get_facets_display_name_expression(facet_type: str, attribute_object_name: str = "_id"):
+    """
+    returns an expression to evaluate a display name based on a facet type.
+    :param facet_type: The type of facet to be displayed.
+    :param attribute_object_name: The name of the attribute object
+    """
     # Convert integer, decimal, or double to string
     # and concatenate it with a unit of measurement if it presents.
     if facet_type in ['decimal', 'integer']:
@@ -6,7 +11,9 @@ def get_facets_display_name(facet_type: str):
             "$trim": {
                 "input": {
                     "$concat": [
-                        {"$toString": "$_id.value"}, " ", {"$ifNull": ["$_id.unit", ""]}]
+                        {"$toString": f"${attribute_object_name}.value"},
+                        " ",
+                        {"$ifNull": [f"${attribute_object_name}.unit", ""]}]
                 }
             }
         }
@@ -16,7 +23,11 @@ def get_facets_display_name(facet_type: str):
         display_name = {
             "$trim": {
                 "input": {
-                    "$concat": ["$_id.value", " ", {"$ifNull": ["$_id.unit", ""]}]
+                    "$concat": [
+                        f"${attribute_object_name}.value",
+                        " ",
+                        {"$ifNull": [f"${attribute_object_name}.unit", ""]}
+                    ]
                 }}
         }
     # If value is bivariate , it means is object. Concatenate (value.x, " x ", value.y)
@@ -25,9 +36,9 @@ def get_facets_display_name(facet_type: str):
             "$trim": {
                 "input": {
                     "$concat": [
-                        {"$toString": "$_id.value.x"}, " x ",
-                        {"$toString": "$_id.value.y"}, " ",
-                        {"$ifNull": ["$_id.unit", ""]},
+                        {"$toString": f"${attribute_object_name}.value.x"}, " x ",
+                        {"$toString": f"${attribute_object_name}.value.y"}, " ",
+                        {"$ifNull": [f"${attribute_object_name}.unit", ""]},
                     ]
                 }
             }
@@ -38,10 +49,10 @@ def get_facets_display_name(facet_type: str):
             "$trim": {
                 "input": {
                     "$concat": [
-                        {"$toString": "$_id.value.x"}, " x ",
-                        {"$toString": "$_id.value.y"}, " x ",
-                        {"$toString": "$_id.value.z"}, " ",
-                        {"$ifNull": ["$_id.unit", ""]},
+                        {"$toString": f"${attribute_object_name}.value.x"}, " x ",
+                        {"$toString": f"${attribute_object_name}.value.y"}, " x ",
+                        {"$toString": f"${attribute_object_name}.value.z"}, " ",
+                        {"$ifNull": [f"${attribute_object_name}.unit", ""]},
                     ]
                 }
             }
@@ -51,8 +62,84 @@ def get_facets_display_name(facet_type: str):
         display_name = {
             "$trim": {
                 "input": {
-                    "$concat": ["$_id.value", " ", {"$ifNull": ["$_id.unit", ""]}]
+                    "$concat": [
+                        f"${attribute_object_name}.value",
+                        " ",
+                        {"$ifNull": [f"${attribute_object_name}.unit", ""]}
+                    ]
                 }}
         }
 
     return display_name
+
+def get_facets_display_name_switch_case(type_field_name: str = "facet_type",
+                                        value_field_name: str = "attr.value",
+                                        unit_field_name: str = "attr.unit"):
+    """
+    This function returns a switch-case operator that computes a display name based on a facet type.
+    :param type_field_name: The field name where the facet type is stored.
+    :param value_field_name: The name of the attribute's / facet's value field.
+    :param unit_field_name: The name of the attribute's / facet's unit field.
+    """
+    return {
+        "$switch": {
+            "branches": [
+                # Convert integer, decimal, or double to string
+                # and concatenate it with a unit of measurement if it presents.
+                {
+                    "case": {"$in": [f"${type_field_name}", ['decimal', 'integer']]},
+                    "then": {
+                        "$trim": {
+                            "input": {
+                                "$concat": [
+                                    {"$toString": f"${value_field_name}"}, " ",
+                                    {"$ifNull": [f"${unit_field_name}", ""]}]
+                            }
+                        }
+                    }
+                },
+                # Since list can have only string items,
+                # and we unwind this list before switch-case, we include "list" to "case"
+                {
+                    "case": {"$in": [f"${type_field_name}", ['string', 'list']]},
+                    "then": {
+                        "$trim": {
+                            "input": {
+                                "$concat": [f"${value_field_name}", " ", {"$ifNull": [f"${unit_field_name}", ""]}]
+                            }}
+                    }
+                },
+                # If value is bivariate , it means is object. Concatenate value.x, " x ", value.y.
+                {
+                    "case": {"$eq": [f"${type_field_name}", "bivariate"]},
+                    "then": {
+                        "$trim": {
+                            "input": {
+                                "$concat": [
+                                    {"$toString": f"${value_field_name}.x"}, " x ",
+                                    {"$toString": f"${value_field_name}.y"}, " ",
+                                    {"$ifNull": [f"${unit_field_name}", ""]},
+                                ]
+                            }
+                        }
+                    }
+                },
+                # If value is trivariate , it means is object. Concatenate value.x, " x ", value.y, " x ", value.z
+                {
+                    "case": {"$eq": [f"${type_field_name}", "trivariate"]},
+                    "then": {"$trim": {
+                        "input": {
+                            "$concat": [
+                                {"$toString": f"${value_field_name}.x"}, " x ",
+                                {"$toString": f"${value_field_name}.y"}, " x ",
+                                {"$toString": f"${value_field_name}.z"}, " ",
+                                {"$ifNull": [f"${unit_field_name}", ""]},
+                            ]
+                        }
+                    }
+                    }
+                },
+            ],
+            'default': "Hello"
+        }
+    }

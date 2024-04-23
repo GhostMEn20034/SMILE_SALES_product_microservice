@@ -1,7 +1,7 @@
 from typing import List, Optional, Dict
 from bson import ObjectId
 
-from src.schemes.product.dto.filters import ProductFiltersDto
+from src.schemes.product.dto.product_list_filters import ProductFiltersDto
 from .chosen_facet_filter_builder import ChosenFacetFilterBuilder
 
 

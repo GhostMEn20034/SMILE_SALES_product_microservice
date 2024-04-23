@@ -1,4 +1,4 @@
-from src.schemes.product.filters import ProductSortOptionsEnum
+from src.schemes.product.filters.product_list import ProductSortOptionsEnum
 
 
 class SortStatementBuilder:

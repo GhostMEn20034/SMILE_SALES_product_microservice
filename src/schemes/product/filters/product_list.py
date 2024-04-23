@@ -1,11 +1,11 @@
 from decimal import Decimal
 from enum import Enum
-from typing import Optional, List, Dict
+from typing import Optional, Dict
 from pydantic import condecimal, constr, Base64UrlStr, conint
 
 from src.schemes.base.pyobject_id import PyObjectId
 from src.dependencies.model_dependencies.facet_filters import get_facet_filters
-from .facet_value_filters import FacetFilterObject
+from src.schemes.product.facet_values.facet_value_filters import FacetFilterObject
 
 
 class ProductSortOptionsEnum(str, Enum):

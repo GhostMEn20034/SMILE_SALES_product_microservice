@@ -1,9 +1,9 @@
 from fastapi.exceptions import HTTPException
 from pydantic import ValidationError
 from json import loads
-from typing import List, Dict
+from typing import Dict
 
-from src.schemes.product.facet_value_filters import FacetFilterObject
+from src.schemes.product.facet_values.facet_value_filters import FacetFilterObject
 
 def get_facet_filters(stringified_facet_filters: str) -> Dict[str, FacetFilterObject]:
     facet_filters: Dict = loads(stringified_facet_filters)

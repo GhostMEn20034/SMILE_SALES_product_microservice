@@ -1,7 +1,7 @@
 from typing import Optional, Dict
 from bson import ObjectId, Decimal128
 
-from src.schemes.product.facet_value_filters import FacetFilterObject
+from src.schemes.product.facet_values.facet_value_filters import FacetFilterObject
 
 class ProductFiltersDto:
     def __init__(self,

@@ -1,7 +1,7 @@
 from typing import Optional, Dict, List
 
 from src.query_utils.product.boundary_handler import BoundaryHandler
-from src.query_utils.product.facet_values_display_name import get_facets_display_name
+from src.query_utils.product.facet_values_display_name import get_facets_display_name_expression
 from src.schemes.facet.base import Facet
 from src.config.constants import MAX_SAFE_INTEGER
 
@@ -28,7 +28,7 @@ def get_pipeline_to_retrieve_regular_facet_values(facet: Facet, match_statement:
                 "value": "$_id.value",
                 "unit": "$_id.unit",
                 "count": 1,
-                "display_name": get_facets_display_name(facet.type),
+                "display_name": get_facets_display_name_expression(facet.type),
             }},
             {"$sort": {"value": 1, "unit": 1, "code": 1}},
             {"$group": {"_id": "$_id.code",

@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from src.schemes.product.filters import ProductPaginationSettings
+from src.schemes.product.filters.product_list import ProductPaginationSettings
 
 
 class ProductListPipelineParams:

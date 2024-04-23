@@ -1,12 +1,11 @@
-from typing import List, Optional, Dict
+from typing import Optional, List, Dict
 from bson import ObjectId
-from pydantic import BaseModel, conint
+from pydantic import BaseModel
 
-from .base import ProductListItem
-from .price_range import PriceRangeFacet
-from .facet_values import FacetValuesObject
 from src.schemes.category.get import CategoryTree
 from src.schemes.facet.facet_metadata import FacetMetadataItem
+from src.schemes.product.facet_values.facet_values_object import FacetValuesObject
+from src.schemes.product.facet_values.price_range import PriceRangeFacet
 
 
 class FacetValuesResponse(BaseModel):
@@ -22,18 +21,3 @@ class FacetValuesResponse(BaseModel):
         populate_by_name = True
         arbitrary_types_allowed = True  # required for the _id
         json_encoders = {ObjectId: str}
-
-
-class ProductListResponse(BaseModel):
-    """
-    Represents the response with list of products
-    """
-    items: List[ProductListItem] = []
-    count: conint(ge=0) = 0
-    page_count: conint(ge=0) = 1
-
-    class Config:
-        populate_by_name = True
-        arbitrary_types_allowed = True  # required for the _id
-        json_encoders = {ObjectId: str}
-

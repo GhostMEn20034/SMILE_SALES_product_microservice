@@ -1,8 +1,11 @@
 from typing import Dict, List
+
+from bson import ObjectId
 from bson.decimal128 import Decimal128
 
 from src.config.settings import settings
 from src.query_utils.common.search_relevance import get_pipeline_to_exclude_low_relevant_search_items
+from src.query_utils.product.get_variations_query_helper import ProductVariationsQueryHelper
 
 
 def get_search_product_pipeline(query: str, exclude_low_relevant_results: bool = False) -> List[Dict]:
@@ -93,3 +96,47 @@ def get_discounted_price():
                 "else": "$price"
             }
     }
+
+
+def get_variations_list_pipeline(parent_id: ObjectId, attribute_codes: List[str]) -> List[Dict]:
+
+    variations_query_helper = ProductVariationsQueryHelper(attribute_codes,
+                                                           "variation_attributes")
+
+    pipeline = [
+        {"$match": {
+            "parent": False,
+            "parent_id": parent_id,
+        }},
+        {"$project": {
+           "name": 1,
+           "variation_attributes": {
+               "$filter": {
+                   "input": "$attrs",
+                   "as": "attr",
+                   "cond": {"$in": ["$$attr.code", attribute_codes]}
+               }
+           }
+        }},
+        {"$project": {
+           "name": 1,
+           "variation_attributes": {
+               "$arrayToObject": {
+                   "$map": {
+                       "input": "$variation_attributes",
+                       "as": "attr",
+                       "in": {
+                           "k": "$$attr.code",
+                           "v": {
+                               "value": "$$attr.value",
+                               "unit": "$$attr.unit",
+                           }
+                       }
+                   }
+               }
+           }
+        }},
+        {"$sort": variations_query_helper.get_sort_keys_for_attributes()},
+    ]
+
+    return pipeline

@@ -1,7 +1,7 @@
-from typing import Any, Optional, List, Union
+from typing import Optional, List, Union
 from pydantic import BaseModel, constr
 
-from .attributes import Trivariate, Bivariate
+from src.schemes.product.base.attribute_values import Trivariate, Bivariate
 
 
 class RangeFacetValue(BaseModel):

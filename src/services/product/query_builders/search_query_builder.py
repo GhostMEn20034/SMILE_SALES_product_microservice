@@ -23,8 +23,8 @@ class ProductSearchQueryBuilder:
     A builder class for constructing search query pipelines for products.
 
     This class uses a `ProductQueryFiltersBuilder` instance to create MongoDB
-    aggregation pipelines that are tailored to retrieve facet values, product lists,
-    and product details based on the current search query and selected facets.
+    aggregation pipelines that are tailored to retrieve facet values, product lists
+    based on the current search query and selected facets.
     """
 
     def __init__(self, query_filters_builder: ProductQueryFiltersBuilder):

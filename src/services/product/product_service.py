@@ -2,18 +2,23 @@ from typing import Dict, List
 from bson import ObjectId
 from fastapi import HTTPException
 
-from src.services.product.product_data_adapter import FilterDataAdapter
+from .product_data_adapter import FilterDataAdapter
 from .query_builders.query_filter_builder import ProductQueryFiltersBuilder
 from .query_builders.search_query_builder import ProductSearchQueryBuilder
-from src.schemes.product.filters import ProductFilters, ProductPaginationSettings
-from src.schemes.product.get import ProductListResponse, FacetValuesResponse
+from src.schemes.product.filters.product_list import ProductFilters, ProductPaginationSettings
+from src.schemes.product.responses.get_variations import GetVariationsResponse
+from src.schemes.product.responses.facet_values import FacetValuesResponse
+from src.schemes.product.responses.product_list import ProductListResponse
 from src.schemes.facet.base import Facet
+from src.schemes.category.base import CategoryShortInfo
+from src.schemes.variation_theme.base import VariationTheme
 from src.repositories.product import ProductRepository
 from src.repositories.category import CategoryRepository
 from src.repositories.facet import FacetRepository
 from src.param_classes.product.product_facet_params import ProductFacetParams
+from src.param_classes.product.variation_options_retrieval_params import VariationOptionsRetrievalParams
 from src.services.search_term.search_term_service import SearchTermService
-from ...utils.facet.facet_metadata_provider import FacetMetadataProvider
+from src.utils.facet.facet_metadata_provider import FacetMetadataProvider
 
 
 class ProductService:
@@ -105,3 +110,43 @@ class ProductService:
             .get_filtered_products(search_query_builder, pagination_settings, category_ids)
 
         return ProductListResponse(**products_data)
+
+    async def get_product_variations_and_options(self, product_id: ObjectId):
+        product = await self.product_repository.get_one_document({"_id": product_id},
+                                                                 {"variation_theme": 1, "parent": 1,
+                                                                  "category": 1,
+                                                                  "parent_id": 1})
+
+        if not product:
+            raise HTTPException(status_code=404, detail="Specified product does not exist")
+
+        variation_theme = product["variation_theme"]
+        if variation_theme is None:
+            raise HTTPException(status_code=400, detail="Given product doesn't have variation theme")
+
+        parent_id = product["parent_id"] if not product["parent"] else product_id
+
+        variation_theme_object = VariationTheme(**variation_theme)
+        variation_options_retrieval_params = VariationOptionsRetrievalParams(parent_id,
+                                                                             variation_theme_object)
+        variation_options = await self.product_repository.get_variation_options(
+            variation_options_retrieval_params
+        )
+
+        variations = await self.product_repository.get_product_variations(variation_options_retrieval_params)
+        variation_summary = {
+            "variation_count": len(variations),
+            "variation_options": variation_options,
+        }
+
+        category_relations = await self.category_repository.get_category_ancestors_and_children(product["category"])
+        category_list = [
+            CategoryShortInfo(**category_object) for category_object in category_relations.get("ancestors", [])
+        ]
+        category_list.append(CategoryShortInfo(**category_relations.get("current", {})))
+
+        return GetVariationsResponse(
+            items=variations,
+            variation_summary=variation_summary,
+            category_hierarchy=category_list,
+        )

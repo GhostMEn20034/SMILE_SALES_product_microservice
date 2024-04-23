@@ -1,7 +1,7 @@
 from typing import Dict, List, Union
 
-from src.schemes.product.facet_value_filters import FacetFilterObject, FacetOption, RangeFacetValue
-from src.schemes.product.attributes import Trivariate, Bivariate
+from src.schemes.product.facet_values.facet_value_filters import FacetFilterObject, FacetOption, RangeFacetValue
+from src.schemes.product.base.attribute_values import Trivariate, Bivariate
 
 
 class ChosenFacetFilterBuilder:

@@ -1,8 +1,7 @@
-import json
 from bson.decimal128 import Decimal128
 
-from src.schemes.product.filters import ProductFilters
-from src.schemes.product.dto.filters import ProductFiltersDto
+from src.schemes.product.filters.product_list import ProductFilters
+from src.schemes.product.dto.product_list_filters import ProductFiltersDto
 
 
 class FilterDataAdapter:
