@@ -22,7 +22,8 @@ class ProductVariationsQueryHelper:
             display_name = get_facets_display_name_switch_case(
                 f"{self.attr_group_key_name}.{attr}.type",
                 f"{self.attr_group_key_name}.{attr}.value",
-                f"{self.attr_group_key_name}.{attr}.unit"
+                f"{self.attr_group_key_name}.{attr}.unit",
+                False
             )
             display_name_fields[f"{self.attr_group_key_name}.{attr}.display_name"] = display_name
 

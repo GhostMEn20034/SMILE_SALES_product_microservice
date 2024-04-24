@@ -146,7 +146,8 @@ def get_pipeline_to_retrieve_product_details(product_id: ObjectId) -> List[Dict]
                         "display_name": get_facets_display_name_switch_case(
                             "$attr.type",
                             "$attr.value",
-                            "$attr.unit"
+                            "$attr.unit",
+                            False,
                         )
                     }
                 }
@@ -162,7 +163,8 @@ def get_pipeline_to_retrieve_product_details(product_id: ObjectId) -> List[Dict]
                         "display_name": get_facets_display_name_switch_case(
                             "$attr.type",
                             "$attr.value",
-                            "$attr.unit"
+                            "$attr.unit",
+                            False,
                         )
                     }
                 }

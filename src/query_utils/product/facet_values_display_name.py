@@ -1,3 +1,52 @@
+def get_string_and_list_branches(type_field_name: str, value_field_name: str,
+                                 unit_field_name: str, list_is_unwinded: bool):
+    if list_is_unwinded:
+        # Since list can have only string items,
+        # and we unwind this list before switch-case, we include "list" to "case"
+        return [{
+            "case": {"$in": [f"${type_field_name}", ['string', 'list']]},
+            "then": {
+                "$trim": {
+                    "input": {
+                        "$concat": [f"${value_field_name}", " ", {"$ifNull": [f"${unit_field_name}", ""]}]
+                    }}
+            }
+        }, ]
+
+    # If list is not unwinded, then we create separate branch for list type
+    return [
+        {
+            "case": {"$eq": [f"${type_field_name}", 'string']},
+            "then": {
+                "$trim": {
+                    "input": {
+                        "$concat": [f"${value_field_name}", " ", {"$ifNull": [f"${unit_field_name}", ""]}]
+                    }}
+            }
+        },
+        {
+            "case": {"$eq": [f"${type_field_name}", 'list']},
+            "then": {
+                "$trim": {
+                    "input": {
+                        "$reduce": {
+                            "input": f"${value_field_name}",
+                            "initialValue": "",
+                            'in': {
+                                '$concat': [
+                                    '$$value',
+                                    {'$cond': [{'$eq': ['$$value', '']}, '', ', ']},
+                                    {"$toString": "$$this"}
+                                ]
+                            }
+                        }
+                    }}
+            }
+        },
+    ]
+
+
+
 def get_facets_display_name_expression(facet_type: str, attribute_object_name: str = "_id"):
     """
     returns an expression to evaluate a display name based on a facet type.
@@ -72,15 +121,23 @@ def get_facets_display_name_expression(facet_type: str, attribute_object_name: s
 
     return display_name
 
+
 def get_facets_display_name_switch_case(type_field_name: str = "facet_type",
                                         value_field_name: str = "attr.value",
-                                        unit_field_name: str = "attr.unit"):
+                                        unit_field_name: str = "attr.unit",
+                                        list_is_unwinded: bool = False,
+                                        ):
     """
     This function returns a switch-case operator that computes a display name based on a facet type.
     :param type_field_name: The field name where the facet type is stored.
     :param value_field_name: The name of the attribute's / facet's value field.
     :param unit_field_name: The name of the attribute's / facet's unit field.
+    :param list_is_unwinded: Boolean to determine
+    if a facet's value is unwinded ($unwind operator was applied to facet's value).
     """
+    string_and_list_branches = get_string_and_list_branches(type_field_name, value_field_name,
+                                                            unit_field_name, list_is_unwinded)
+
     return {
         "$switch": {
             "branches": [
@@ -100,15 +157,7 @@ def get_facets_display_name_switch_case(type_field_name: str = "facet_type",
                 },
                 # Since list can have only string items,
                 # and we unwind this list before switch-case, we include "list" to "case"
-                {
-                    "case": {"$in": [f"${type_field_name}", ['string', 'list']]},
-                    "then": {
-                        "$trim": {
-                            "input": {
-                                "$concat": [f"${value_field_name}", " ", {"$ifNull": [f"${unit_field_name}", ""]}]
-                            }}
-                    }
-                },
+                *string_and_list_branches,
                 # If value is bivariate , it means is object. Concatenate value.x, " x ", value.y.
                 {
                     "case": {"$eq": [f"${type_field_name}", "bivariate"]},
