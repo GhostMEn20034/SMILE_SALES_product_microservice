@@ -7,6 +7,7 @@ from .base.base_repository import BaseRepository
 from src.services.product.query_builders.search_query_builder import ProductSearchQueryBuilder
 from src.services.product.query_builders.variations_query_builder import VariationsQueryBuilder
 from src.aggregation_pipelines.product.product_count import get_pipeline_to_retrieve_product_count_by_category
+from src.aggregation_pipelines.product.product_details import get_pipeline_to_retrieve_product_details
 from src.param_classes.product.product_facet_params import ProductFacetParams
 from src.param_classes.product.product_list_pipeline_params import ProductListPipelineParams
 from src.param_classes.product.variation_options_retrieval_params import VariationOptionsRetrievalParams
@@ -138,4 +139,12 @@ class ProductRepository(BaseRepository):
         ).to_list(length=None)
 
         return variations
+
+    async def get_product_details(self, product_id: ObjectId) -> Dict:
+        pipeline = get_pipeline_to_retrieve_product_details(product_id)
+        product = await self.db[self.collection_name].aggregate(
+            pipeline=pipeline
+        ).to_list(length=None)
+
+        return product[0] if product else {}
 

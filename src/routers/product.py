@@ -6,6 +6,7 @@ from src.schemes.product.filters.product_list import ProductFilters, ProductPagi
 from src.schemes.product.responses.get_variations import GetVariationsResponse
 from src.schemes.product.responses.facet_values import FacetValuesResponse
 from src.schemes.product.responses.product_list import ProductListResponse
+from src.schemes.product.responses.product_details import ProductDetailsResponse
 from src.dependencies.service_dependencies.product import get_product_service
 from src.services.product.product_service import ProductService
 from src.services.product.product_validator import ProductValidator
@@ -25,12 +26,18 @@ async def get_facet_values(filters: FiltersDep, service: ServiceDep):
     ProductValidator.validate_product_filters(filters)
     return await service.get_filtered_facet_values(filters)
 
+
 @router.get("/", response_model=ProductListResponse)
-async def get_products_list(filters: FiltersDep, pagination_settings: PaginationSettingsDep, service: ServiceDep):
+async def get_product_list(filters: FiltersDep, pagination_settings: PaginationSettingsDep, service: ServiceDep):
     ProductValidator.validate_product_filters(filters)
     return await service.get_product_list(filters, pagination_settings)
+
 
 @router.get("/{product_id}/get-variations/", response_model=GetVariationsResponse)
 async def get_product_variations(product_id: PyObjectId, service: ServiceDep):
     return await service.get_product_variations_and_options(product_id)
 
+
+@router.get("/{product_id}", response_model=ProductDetailsResponse)
+async def get_product(product_id: PyObjectId, service: ServiceDep):
+    return await service.get_product_by_id(product_id)

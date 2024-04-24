@@ -9,6 +9,7 @@ from src.schemes.product.filters.product_list import ProductFilters, ProductPagi
 from src.schemes.product.responses.get_variations import GetVariationsResponse
 from src.schemes.product.responses.facet_values import FacetValuesResponse
 from src.schemes.product.responses.product_list import ProductListResponse
+from src.schemes.product.responses.product_details import ProductDetailsResponse
 from src.schemes.facet.base import Facet
 from src.schemes.category.base import CategoryShortInfo
 from src.schemes.variation_theme.base import VariationTheme
@@ -111,7 +112,7 @@ class ProductService:
 
         return ProductListResponse(**products_data)
 
-    async def get_product_variations_and_options(self, product_id: ObjectId):
+    async def get_product_variations_and_options(self, product_id: ObjectId) -> GetVariationsResponse:
         product = await self.product_repository.get_one_document({"_id": product_id},
                                                                  {"variation_theme": 1, "parent": 1,
                                                                   "category": 1,
@@ -150,3 +151,14 @@ class ProductService:
             variation_summary=variation_summary,
             category_hierarchy=category_list,
         )
+
+    async def get_product_by_id(self, product_id: ObjectId) -> ProductDetailsResponse:
+        product = await self.product_repository.get_one_document({"_id": product_id}, {"parent": 1})
+        if not product:
+            raise HTTPException(status_code=404, detail="Product with the specified ID does not exist")
+
+        if product["parent"]:
+            raise HTTPException(status_code=400, detail="Parent product cannot be sold")
+
+        product = await self.product_repository.get_product_details(product_id)
+        return ProductDetailsResponse(item=product)
