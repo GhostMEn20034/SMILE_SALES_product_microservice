@@ -2,7 +2,6 @@ from typing import List, Dict, Union, Optional
 from pydantic import BaseModel, Field, constr
 
 from src.schemes.base.pyobject_id import PyObjectId
-from src.schemes.category.base import CategoryShortInfo
 from src.schemes.product.base.attribute_values import Trivariate, Bivariate
 
 
@@ -52,5 +51,4 @@ class VariationSummary(BaseModel):
 class GetVariationsResponse(BaseModel):
     items: List[ProductVariationListItem]
     variation_summary: VariationSummary
-    category_hierarchy: List[CategoryShortInfo]
 

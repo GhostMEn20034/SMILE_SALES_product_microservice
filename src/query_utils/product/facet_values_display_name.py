@@ -1,5 +1,11 @@
 def get_string_and_list_branches(type_field_name: str, value_field_name: str,
                                  unit_field_name: str, list_is_unwinded: bool):
+    """
+    Returns switch-case branches to calculate display names for string and list datatypes.
+    If value with list datatype is unwinded, it will be considered as string.
+    If value with list datatype is not unwinded,
+    it will be considered as a list and display_name will result from joining all elements in the list to one string.
+    """
     if list_is_unwinded:
         # Since list can have only string items,
         # and we unwind this list before switch-case, we include "list" to "case"

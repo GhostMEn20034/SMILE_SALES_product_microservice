@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field, constr, conint, AnyHttpUrl
 
 from src.schemes.base.pydecimal128 import PyDecimal128
 from src.schemes.base.pyobject_id import PyObjectId
+from src.schemes.category.base import CategoryShortInfo
 
 
 class ProductDetailsAttribute(BaseModel):
@@ -31,4 +32,5 @@ class ProductDetailsItem(BaseModel):
 
 class ProductDetailsResponse(BaseModel):
     item: ProductDetailsItem
+    category_hierarchy: List[CategoryShortInfo]
 

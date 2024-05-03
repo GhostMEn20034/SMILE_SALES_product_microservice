@@ -115,7 +115,6 @@ class ProductService:
     async def get_product_variations_and_options(self, product_id: ObjectId) -> GetVariationsResponse:
         product = await self.product_repository.get_one_document({"_id": product_id},
                                                                  {"variation_theme": 1, "parent": 1,
-                                                                  "category": 1,
                                                                   "parent_id": 1})
 
         if not product:
@@ -140,25 +139,27 @@ class ProductService:
             "variation_options": variation_options,
         }
 
-        category_relations = await self.category_repository.get_category_ancestors_and_children(product["category"])
-        category_list = [
-            CategoryShortInfo(**category_object) for category_object in category_relations.get("ancestors", [])
-        ]
-        category_list.append(CategoryShortInfo(**category_relations.get("current", {})))
-
         return GetVariationsResponse(
             items=variations,
             variation_summary=variation_summary,
-            category_hierarchy=category_list,
         )
 
     async def get_product_by_id(self, product_id: ObjectId) -> ProductDetailsResponse:
-        product = await self.product_repository.get_one_document({"_id": product_id}, {"parent": 1})
+        product = await self.product_repository.get_one_document({"_id": product_id},
+                                                                 {"parent": 1, "category": 1})
         if not product:
             raise HTTPException(status_code=404, detail="Product with the specified ID does not exist")
 
         if product["parent"]:
             raise HTTPException(status_code=400, detail="Parent product cannot be sold")
 
-        product = await self.product_repository.get_product_details(product_id)
-        return ProductDetailsResponse(item=product)
+        product_details = await self.product_repository.get_product_details(product_id)
+        category_relations = await self.category_repository.get_category_ancestors_and_children(product["category"])
+        category_list = [
+            CategoryShortInfo(**category_object) for category_object in category_relations.get("ancestors", [])
+        ]
+        category_list.append(CategoryShortInfo(**category_relations.get("current", {})))
+
+
+        return ProductDetailsResponse(item=product_details,
+                                      category_hierarchy=category_list,)
