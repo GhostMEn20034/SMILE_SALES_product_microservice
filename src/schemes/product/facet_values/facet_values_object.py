@@ -29,8 +29,6 @@ class FacetValuesObject(BaseModel):
     name: constr(min_length=1)
     # Is Facet is Range Facet
     is_range: bool
-    # A brief description or explanation of the facet.
-    explanation: Optional[constr(min_length=1)]
     # A list of 'FacetValueItem' instances representing the facet's values.
     values: List[FacetValueItem]
 

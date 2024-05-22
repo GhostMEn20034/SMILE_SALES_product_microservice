@@ -57,6 +57,7 @@ def get_pipeline_to_retrieve_facets_by_category_priority(category_ids: List[Obje
         {
             "$project": {
                 "priority": 0,
+                "explanation": 0,
             }
         }
     ]

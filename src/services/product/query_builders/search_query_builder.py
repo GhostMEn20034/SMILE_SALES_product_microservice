@@ -35,24 +35,29 @@ class ProductSearchQueryBuilder:
         return {"discounted_price": get_discounted_price()}
 
     def build_common_filters(self, category_ids: Optional[List[ObjectId]] = None,
-                             add_facet_filters: bool = False) -> Dict:
+                             add_facet_filters: bool = False,
+                             only_filterable_products: bool = False) -> Dict:
         """
         Builds common filters for getting all facet values and product list.
-        :param category_ids: List of categories to filter
-        :param add_facet_filters: Whether to add facet filters to the $match filter stage
+        :param category_ids: List of categories to filter.
+        :param add_facet_filters: Whether to add facet filters to the $match filter stage.
+        :param only_filterable_products: Whether to include only filterable products to the result.
         """
         filters = {}
-        filters.update(self.query_filters_builder.build_price_range_filter("discounted_price"))
         filters.update(self.query_filters_builder \
                        .build_multiple_category_filter(category_ids))
         filters.update({
             "for_sale": True, "parent": False,
         })
+        if only_filterable_products:
+            filters["is_filterable"] = True
+
         if add_facet_filters:
             facet_filters = self.query_filters_builder.build_facet_filter()
             if facet_filters:
                 filters.update({"$and": facet_filters})
 
+        filters.update(self.query_filters_builder.build_price_range_filter("discounted_price"))
         return filters
 
     def build_search_pipeline(self, query: Optional[str] = None) -> List[Dict]:
@@ -142,7 +147,7 @@ class ProductSearchQueryBuilder:
             {"$project": {
                 "items": 1,
                 "count": "$count.count",
-            }}
+            }},
         ]
 
         return pipeline

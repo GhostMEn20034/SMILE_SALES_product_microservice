@@ -35,7 +35,6 @@ class Facet(BaseModel):
     show_in_filters: bool
     values: Optional[List[Any]] = None
     categories: Union[List[PyObjectId], str]
-    explanation: Optional[str] = None
     units: Optional[List[str]] = None
     is_range: bool = False
     range_values: Optional[List[RangeValue]] = None

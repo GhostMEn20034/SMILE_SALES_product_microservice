@@ -43,7 +43,6 @@ def get_pipeline_to_retrieve_regular_facet_values(facet: Facet, match_statement:
                 "_id": 0,
                 "code": "$_id",
                 "name": facet.name,
-                "explanation": facet.explanation,
                 "is_range": {"$toBool": False},
                 "values": 1,
             }},
@@ -106,7 +105,6 @@ def get_pipeline_to_retrieve_range_facet_values(facet: Facet, match_statement: d
                 "code": facet.code,
                 "name": facet.name,
                 "is_range": {"$toBool": True},
-                "explanation": facet.explanation,
                 "values": 1,
             }},
         ]

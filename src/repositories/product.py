@@ -43,10 +43,8 @@ class ProductRepository(BaseRepository):
                                product_facet_params: ProductFacetParams):
         # Add query filters to dict of filters
         filters = {}
-        filters.update(search_query_builder.build_common_filters(product_facet_params.category_ids))
-        filters.update({
-            "is_filterable": True
-        })
+        filters.update(search_query_builder.build_common_filters(product_facet_params.category_ids,
+                                                                 only_filterable_products=True))
         final_pipeline = []
         # Add search pipeline stage if search query in product filters dto is not None and has at least one character
         final_pipeline.extend(search_query_builder.build_search_pipeline())
@@ -70,7 +68,7 @@ class ProductRepository(BaseRepository):
         facet_values = await self.db[self.collection_name].aggregate(pipeline=final_pipeline).to_list(length=None)
         price_range_facet = None
 
-        if 'price_range' in facet_values[0] and facet_values[0].get('price_range'):
+        if facet_values[0].get('price_range'):
             price_range_facet = facet_values[0].pop('price_range')[0]
 
         result = []
@@ -110,7 +108,6 @@ class ProductRepository(BaseRepository):
         result["page_count"] = ceil(result["count"] / pagination_settings.page_size)
         return result
 
-
     async def get_variation_options(self,
                                     variation_options_retrieval_params: VariationOptionsRetrievalParams) -> List[Dict]:
         variation_options_pipeline = VariationsQueryBuilder \
@@ -147,4 +144,3 @@ class ProductRepository(BaseRepository):
         ).to_list(length=None)
 
         return product[0] if product else {}
-

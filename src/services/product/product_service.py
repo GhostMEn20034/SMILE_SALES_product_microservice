@@ -41,10 +41,6 @@ class ProductService:
         # Whether category was automatically defined (True) or specified manually (False)
         auto_defined = False
 
-        is_document_exist = await self.category_repository.is_document_exists({"_id": current_category})
-        if not is_document_exist and current_category:
-            raise HTTPException(status_code=404, detail="Specified category does not exist")
-
         query_filters_builder = ProductQueryFiltersBuilder(product_filters_dto=filters_dto)
         search_query_builder = ProductSearchQueryBuilder(query_filters_builder)
         facets_category_ids = []

@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Optional, Dict
 from pydantic import condecimal, constr, Base64UrlStr, conint
 
+from src.schemes.base.base_pagination_settings import BasePaginationSettings
 from src.schemes.base.pyobject_id import PyObjectId
 from src.dependencies.model_dependencies.facet_filters import get_facet_filters
 from src.schemes.product.facet_values.facet_value_filters import FacetFilterObject
@@ -36,11 +37,10 @@ class ProductFilters:
         ) if chosen_facets is not None else None
 
 
-class ProductPaginationSettings:
+class ProductPaginationSettings(BasePaginationSettings):
     def __init__(self,
                  page: conint(ge=0) = 1,
                  page_size: conint(ge=0) = 25,
                  sort_option: ProductSortOptionsEnum = ProductSortOptionsEnum.relevancy, ):
-        self.page = page
-        self.page_size = page_size
+        super().__init__(page, page_size)
         self.sort_option = sort_option
