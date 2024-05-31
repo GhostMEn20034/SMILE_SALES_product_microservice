@@ -56,6 +56,7 @@ class ProductSearchQueryBuilder:
             facet_filters = self.query_filters_builder.build_facet_filter()
             if facet_filters:
                 filters.update({"$and": facet_filters})
+        filters.update(self.query_filters_builder.build_event_id_filter())
 
         filters.update(self.query_filters_builder.build_price_range_filter("discounted_price"))
         return filters

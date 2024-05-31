@@ -1,12 +1,15 @@
 from math import ceil
-from typing import List, Dict
+from typing import List, Dict, Any
 from bson import ObjectId
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from .base.base_repository import BaseRepository
 from src.services.product.query_builders.search_query_builder import ProductSearchQueryBuilder
 from src.services.product.query_builders.variations_query_builder import VariationsQueryBuilder
-from src.aggregation_pipelines.product.product_count import get_pipeline_to_retrieve_product_count_by_category
+from src.aggregation_pipelines.product.product_count import (
+    build_product_count_by_category_pipeline,
+    build_product_count_by_category_with_join
+)
 from src.aggregation_pipelines.product.product_details import get_pipeline_to_retrieve_product_details
 from src.param_classes.product.product_facet_params import ProductFacetParams
 from src.param_classes.product.product_list_pipeline_params import ProductListPipelineParams
@@ -35,8 +38,20 @@ class ProductRepository(BaseRepository):
         # Add filters to pipeline
         final_pipeline.append({"$match": filters})
         # Extend main pipeline by pipeline to get product count by category
-        final_pipeline.extend(get_pipeline_to_retrieve_product_count_by_category())
+        final_pipeline.extend(build_product_count_by_category_pipeline())
         products_count = await self.db[self.collection_name].aggregate(pipeline=final_pipeline).to_list(length=None)
+        return products_count
+
+    async def get_product_count_by_category_with_join(self, filters: Dict[str, Any]):
+        """
+        Retrieves product count grouped by category with joined category data.
+        """
+        pipeline =[
+            {"$match": filters},
+            *build_product_count_by_category_with_join(),
+        ]
+
+        products_count = await self.db[self.collection_name].aggregate(pipeline=pipeline).to_list(length=None)
         return products_count
 
     async def get_facet_values(self, search_query_builder: ProductSearchQueryBuilder,

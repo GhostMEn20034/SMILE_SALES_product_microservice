@@ -9,10 +9,12 @@ class ProductFiltersDto:
                  max_price: Optional[Decimal128] = None,
                  category: Optional[ObjectId] = None,
                  q: Optional[str] = None,
-                 chosen_facets: Optional[Dict[str, FacetFilterObject]] = None
+                 chosen_facets: Optional[Dict[str, FacetFilterObject]] = None,
+                 event_id: Optional[ObjectId] = None,
                  ):
         self.min_price = min_price
         self.max_price = max_price
         self.category = category
         self.q = q
         self.chosen_facets = chosen_facets
+        self.event_id = event_id

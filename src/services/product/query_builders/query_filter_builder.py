@@ -62,6 +62,13 @@ class ProductQueryFiltersBuilder:
 
         return category_filter
 
+    def build_event_id_filter(self):
+        event_id_filter = {}
+        if self.product_filters_dto.event_id:
+            event_id_filter["event_id"] = self.product_filters_dto.event_id
+
+        return event_id_filter
+
     @staticmethod
     def build_multiple_category_filter(categories: Optional[List[ObjectId]] = None):
         """

@@ -1,28 +1,22 @@
 from typing import Dict, List
 
+from src.schemes.event.pagination_settings import EventPaginationSettings
 from src.aggregation_pipelines.base.pagination_pipelines import get_pagination_to_skip_items
-from src.schemes.deal.pagination_settings import DealPaginationSettings
 
 
-def get_pipeline_to_retrieve_list_of_deals(pagination_settings: DealPaginationSettings) -> List[Dict]:
+def get_pipeline_to_retrieve_event_list(filters: dict,
+                                        pagination_settings: EventPaginationSettings) -> List[Dict]:
     pipeline = [
-        {"$match": {
-            "is_visible": True,
-            "parent_id": None,
-        }},
+        {"$match": filters},
         {"$facet": {
             "items": [
                 {"$sort": {
-                    "modified_at": -1,
+                    "start_date": -1,
                 }},
                 *get_pagination_to_skip_items(pagination_settings.page, pagination_settings.page_size),
                 {"$project": {
-                    "name": 1,
-                    "is_parent": 1,
-                    "parent_id": 1,
-                    "query_string": 1,
-                    "button_text": 1,
-                    "image": 1,
+                    "discounted_products": 0,
+                    "description": 0,
                 }},
             ],
             "count": [

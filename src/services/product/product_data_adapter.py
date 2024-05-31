@@ -24,4 +24,5 @@ class FilterDataAdapter:
             category=self.filter_data.category,
             q=self.filter_data.q,
             chosen_facets=self.filter_data.chosen_facets,
+            event_id=self.filter_data.event_id,
         )
