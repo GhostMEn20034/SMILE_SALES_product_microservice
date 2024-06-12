@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from src.schemes.category.get import CategoryTree
 from src.schemes.facet.facet_metadata import FacetMetadataItem
-from src.schemes.product.facet_values.facet_values_object import FacetValuesObject
+from src.schemes.product.facet_values.facet_values_object import FacetValueObject
 from src.schemes.product.facet_values.price_range import PriceRangeFacet
 
 
@@ -14,7 +14,7 @@ class FacetValuesResponse(BaseModel):
     """
     categories: CategoryTree
     price_range: Optional[PriceRangeFacet]
-    facet_values: List[FacetValuesObject]
+    facet_values: List[FacetValueObject]
     facet_metadata: Dict[str, FacetMetadataItem]
 
     class Config:

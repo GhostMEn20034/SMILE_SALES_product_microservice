@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, Field, constr, conint, AnyHttpUrl
 
 from src.schemes.base.pydecimal128 import PyDecimal128
@@ -11,9 +11,12 @@ class ProductDetailsAttribute(BaseModel):
     """
     Short representation of product's attribute
     """
+    code: constr(min_length=1)
     name: constr(min_length=1)
+    value: Any
+    unit: Optional[constr(min_length=1)] = None
+    type: constr(min_length=1)
     explanation: Optional[constr(min_length=1)] = None
-    display_name: constr(min_length=1)
 
 
 class ProductDetailsItem(BaseModel):

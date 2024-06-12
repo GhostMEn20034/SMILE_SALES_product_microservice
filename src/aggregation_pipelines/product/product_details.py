@@ -2,7 +2,6 @@ from typing import List, Dict
 from bson import ObjectId, Decimal128
 
 from src.param_classes.product.variation_options_retrieval_params import VariationOptionsRetrievalParams
-from src.query_utils.product.facet_values_display_name import get_facets_display_name_switch_case
 from src.query_utils.product.get_variations_query_helper import ProductVariationsQueryHelper
 from src.aggregation_pipelines.product.product_list import get_discounted_price
 
@@ -140,15 +139,13 @@ def get_pipeline_to_retrieve_product_details(product_id: ObjectId) -> List[Dict]
                     'input': '$attrs',
                     'as': 'attr',
                     'in': {
+                        "code": "$$attr.code",
                         "name": "$$attr.name",
+                        "value": "$$attr.value",
+                        "unit": "$$attr.unit",
+                        "type": "$$attr.type",
                         "explanation": "$$attr.explanation",
                         "group": "$$attr.group",
-                        "display_name": get_facets_display_name_switch_case(
-                            "$attr.type",
-                            "$attr.value",
-                            "$attr.unit",
-                            False,
-                        )
                     }
                 }
             },
@@ -157,15 +154,13 @@ def get_pipeline_to_retrieve_product_details(product_id: ObjectId) -> List[Dict]
                     'input': '$extra_attrs',
                     'as': 'attr',
                     'in': {
+                        "code": "$$attr.code",
                         "name": "$$attr.name",
+                        "value": "$$attr.value",
+                        "unit": "$$attr.unit",
+                        "type": "$$attr.type",
                         "explanation": "$$attr.explanation",
                         "group": "$$attr.group",
-                        "display_name": get_facets_display_name_switch_case(
-                            "$attr.type",
-                            "$attr.value",
-                            "$attr.unit",
-                            False,
-                        )
                     }
                 }
             }

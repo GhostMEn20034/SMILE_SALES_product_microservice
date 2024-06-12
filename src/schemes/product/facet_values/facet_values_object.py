@@ -12,11 +12,9 @@ class FacetValueItem(BaseModel):
     unit: Optional[constr(min_length=1)] = None
     # The number of occurrences or frequency of the facet value.
     count: conint(ge=0)
-    # The human-readable name for the facet value.
-    display_name: constr(min_length=1)
 
 
-class FacetValuesObject(BaseModel):
+class FacetValueObject(BaseModel):
     """
     Encapsulates the values associated with a specific facet code and name.
 
@@ -27,6 +25,8 @@ class FacetValuesObject(BaseModel):
     code: constr(min_length=1)
     # The human-readable name of the facet.
     name: constr(min_length=1)
+    # The type of the facet
+    type: constr(min_length=1)
     # Is Facet is Range Facet
     is_range: bool
     # A list of 'FacetValueItem' instances representing the facet's values.
