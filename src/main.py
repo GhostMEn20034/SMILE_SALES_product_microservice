@@ -7,6 +7,7 @@ from src.routers.search_term import router as search_term_router
 from src.routers.product import router as product_router
 from src.routers.deal import router as deal_router
 from src.routers.event import router as event_router
+from src.routers.category import router as category_router
 
 
 app = FastAPI()
@@ -26,6 +27,7 @@ app.include_router(search_term_router, prefix='/api/v1')
 app.include_router(product_router, prefix='/api/v1')
 app.include_router(deal_router, prefix='/api/v1')
 app.include_router(event_router, prefix='/api/v1')
+app.include_router(category_router, prefix='/api/v1')
 
 
 @app.get("/ping")

@@ -7,6 +7,8 @@ from src.aggregation_pipelines.category.category_relations import (
     get_category_relations,
     get_category_children_pipeline
 )
+from src.aggregation_pipelines.category.category_list import build_pipeline_to_retrieve_category_lineage
+from src.param_classes.category.category_filters import CategoryListFilters
 
 
 class CategoryRepository(BaseRepository):
@@ -35,3 +37,18 @@ class CategoryRepository(BaseRepository):
             pipeline=get_category_children_pipeline(category_id, self.collection_name)
         ).to_list(length=None)
         return categories
+
+    async def get_categories_and_nearest_children(self, filters: CategoryListFilters):
+        """
+        Returns category list and nearest children of each matched category.
+        :param filters: Filters to reduce search area.
+        """
+        pipeline = build_pipeline_to_retrieve_category_lineage(filters, self.collection_name)
+        category_lineage = await self.db[self.collection_name].aggregate(pipeline).to_list(length=None)
+
+        formatted_result = {
+            "items": category_lineage[0].get("items") if category_lineage else [],
+            "parent_data": category_lineage[0].get("parent_data") if category_lineage else None,
+        }
+
+        return formatted_result
