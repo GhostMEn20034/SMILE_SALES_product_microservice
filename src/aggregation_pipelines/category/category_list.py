@@ -2,6 +2,7 @@ from typing import Dict, List
 
 from src.param_classes.category.category_filters import CategoryListFilters
 
+
 def build_pipeline_to_retrieve_category_lineage(filters: CategoryListFilters, collection_name: str) -> List[Dict]:
     aggregations = {
         "items": [
@@ -15,8 +16,8 @@ def build_pipeline_to_retrieve_category_lineage(filters: CategoryListFilters, co
                 "maxDepth": 0,
             }},
             {"$project": {
-               "_id": 1,
-               "name": 1,
+                "_id": 1,
+                "name": 1,
                 "nearest_children": {
                     "_id": 1,
                     "name": 1,
@@ -34,9 +35,33 @@ def build_pipeline_to_retrieve_category_lineage(filters: CategoryListFilters, co
             {"$match": {
                 "_id": filters.parent_id,
             }},
+            {"$graphLookup": {
+                "from": collection_name,
+                "startWith": "$parent_id",
+                "connectFromField": "parent_id",
+                "connectToField": "_id",
+                "as": "parent_ancestors",
+                "depthField": "depth",
+            }},
             {"$project": {
-               "_id": 1,
-               "name": 1,
+                "_id": 1,
+                "name": 1,
+                "parent_ancestors": {
+                    "$sortArray": {
+                        "input": "$parent_ancestors",
+                        "sortBy": {
+                            "depth": -1,
+                        }
+                    }
+                }
+            }},
+            {"$project": {
+                "_id": 1,
+                "name": 1,
+                "parent_ancestors": {
+                    "_id": 1,
+                    "name": 1,
+                }
             }},
         ]
 

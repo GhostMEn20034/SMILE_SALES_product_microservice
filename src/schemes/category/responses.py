@@ -7,9 +7,12 @@ from .base import CategoryShortInfo
 class CategoryItem(CategoryShortInfo):
     nearest_children: List[CategoryShortInfo]
 
+class ParentCategory(CategoryShortInfo):
+    parent_ancestors: List[CategoryShortInfo]
+
 class CategoryListResponse(BaseModel):
     items: List[CategoryItem]
-    parent_data: Optional[CategoryShortInfo]
+    parent_data: Optional[ParentCategory]
 
     class Config:
         populate_by_name = True
