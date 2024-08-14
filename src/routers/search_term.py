@@ -14,5 +14,5 @@ ServiceDep = Annotated[SearchTermService, Depends(get_search_term_service)]
 SearchTermParamsDep = Annotated[SearchTermListFilters, Depends(SearchTermListFilters)]
 
 @router.get('/', response_model=List[SearchTermItem])
-async def find_search_terms(filters: SearchTermParamsDep, service: ServiceDep):
+async def find_search_terms(filters: SearchTermParamsDep, service: ServiceDep) -> List[SearchTermItem]:
     return await service.find_search_terms_by_name(filters.q)

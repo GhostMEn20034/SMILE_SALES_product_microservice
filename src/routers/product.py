@@ -1,5 +1,6 @@
 import fastapi
 from typing import Annotated
+from fastapi_cache.decorator import cache
 
 from src.schemes.base.pyobject_id import PyObjectId
 from src.schemes.product.filters.product_list import ProductFilters, ProductPaginationSettings
@@ -22,22 +23,27 @@ ServiceDep = Annotated[ProductService, fastapi.Depends(get_product_service)]
 
 
 @router.get("/facet-values", response_model=FacetValuesResponse)
-async def get_facet_values(filters: FiltersDep, service: ServiceDep):
+@cache(expire=60 * 30, namespace="products") # Cache the response for 30 minutes
+async def get_facet_values(filters: FiltersDep, service: ServiceDep) -> FacetValuesResponse:
     ProductValidator.validate_product_filters(filters)
     return await service.get_filtered_facet_values(filters)
 
 
 @router.get("/", response_model=ProductListResponse)
-async def get_product_list(filters: FiltersDep, pagination_settings: PaginationSettingsDep, service: ServiceDep):
+@cache(expire=60 * 30, namespace="products") # Cache the response for 30 minutes
+async def get_product_list(filters: FiltersDep, pagination_settings: PaginationSettingsDep,
+                           service: ServiceDep) -> ProductListResponse:
     ProductValidator.validate_product_filters(filters)
     return await service.get_product_list(filters, pagination_settings)
 
 
 @router.get("/{product_id}/get-variations/", response_model=GetVariationsResponse)
-async def get_product_variations(product_id: PyObjectId, service: ServiceDep):
+@cache(expire=60 * 30, namespace="products") # Cache the response for 30 minutes
+async def get_product_variations(product_id: PyObjectId, service: ServiceDep) -> GetVariationsResponse:
     return await service.get_product_variations_and_options(product_id)
 
 
 @router.get("/{product_id}", response_model=ProductDetailsResponse)
-async def get_product(product_id: PyObjectId, service: ServiceDep):
+@cache(expire=60 * 10, namespace="products") # Cache the response for 10 minutes
+async def get_product(product_id: PyObjectId, service: ServiceDep) -> ProductDetailsResponse:
     return await service.get_product_by_id(product_id)

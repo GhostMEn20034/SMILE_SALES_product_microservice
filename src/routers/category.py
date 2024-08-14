@@ -1,6 +1,8 @@
 import fastapi
 from typing import Annotated
 
+from fastapi_cache.decorator import cache
+
 from src.dependencies.service_dependencies.category import get_category_service
 from src.services.category.category_service import CategoryService
 from src.schemes.category.responses import CategoryListResponse
@@ -17,5 +19,6 @@ CategoryListFiltersDep = Annotated[CategoryListParams, fastapi.Depends(CategoryL
 
 
 @router.get("/", response_model=CategoryListResponse)
-async def get_category_list(filters: CategoryListFiltersDep, service: ServiceDep):
+@cache(expire=60 * 60, namespace="categories") # Cache the response for 1 hour
+async def get_category_list(filters: CategoryListFiltersDep, service: ServiceDep) -> CategoryListResponse:
     return await service.get_category_list_with_nearest_children_and_parent(filters)

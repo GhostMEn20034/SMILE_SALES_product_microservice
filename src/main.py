@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.config.lifespan import lifespan
 from src.config.settings import settings
 
 from src.routers.search_term import router as search_term_router
@@ -10,7 +11,7 @@ from src.routers.event import router as event_router
 from src.routers.category import router as category_router
 
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 origins = settings.allowed_origins
 
@@ -31,5 +32,5 @@ app.include_router(category_router, prefix='/api/v1')
 
 
 @app.get("/ping")
-async def ping():
+async def ping() -> dict:
     return {"response": "pong"}
