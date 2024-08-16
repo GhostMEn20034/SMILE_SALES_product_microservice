@@ -6,6 +6,10 @@ class SearchTermService:
         self.search_term_repository = search_term_repository
 
     async def find_search_terms_by_name(self, query: str):
+        if len(query.strip()) == 0:
+            search_terms = await self.search_term_repository.get_the_most_popular_search_terms()
+            return search_terms
+
         search_terms = await self.search_term_repository.find_search_terms_by_name(query)
         return search_terms
 

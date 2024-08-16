@@ -1,0 +1,136 @@
+[
+    {
+        "_id": "64d686ecc656f29009705340",
+        "name": "Electronics",
+        "level": 0,
+        "parent_id": null,
+        "tree_id": "64ef8bc6503e874da6353a4f",
+        "groups": null
+    },
+    {
+        "_id": "64d68709c656f29009705341",
+        "name": "Computers & Accessories",
+        "level": 1,
+        "parent_id": "64d686ecc656f29009705340",
+        "tree_id": "64ef8bc6503e874da6353a4f",
+        "groups": null
+    },
+    {
+        "_id": "64d68760c656f29009705342",
+        "name": "Computers & Tablets",
+        "level": 2,
+        "parent_id": "64d68709c656f29009705341",
+        "tree_id": "64ef8bc6503e874da6353a4f",
+        "groups": null
+    },
+    {
+        "_id": "64d6883fc656f29009705343",
+        "name": "Laptops",
+        "level": 3,
+        "parent_id": "64d68760c656f29009705342",
+        "tree_id": "64ef8bc6503e874da6353a4f",
+        "groups": [
+            "Screen",
+            "Processor",
+            "Graphics",
+            "RAM",
+            "Storage"
+        ]
+    },
+    {
+        "_id": "64f9f11a500a756767921cfb",
+        "name": "Headphones, earbuds & Accessories",
+        "level": 1,
+        "tree_id": "64ef8bc6503e874da6353a4f",
+        "parent_id": "64d686ecc656f29009705340",
+        "groups": null
+    },
+    {
+        "_id": "64f9f1af500a756767921cfc",
+        "name": "Headphones & earbuds",
+        "level": 2,
+        "tree_id": "64ef8bc6503e874da6353a4f",
+        "parent_id": "64f9f11a500a756767921cfb",
+        "groups": null
+    },
+    {
+        "_id": "64f9f1d6500a756767921cfd",
+        "name": "Earbud headphones",
+        "level": 3,
+        "tree_id": "64ef8bc6503e874da6353a4f",
+        "parent_id": "64f9f1af500a756767921cfc",
+        "groups": null
+    },
+    {
+        "_id": "64f9f217500a756767921cfe",
+        "name": "On-Ear Headphones",
+        "level": 3,
+        "tree_id": "64ef8bc6503e874da6353a4f",
+        "parent_id": "64f9f1af500a756767921cfc",
+        "groups": null
+    },
+    {
+        "_id": "64f9f24e500a756767921cff",
+        "name": "Open-Ear Headphones",
+        "level": 3,
+        "tree_id": "64ef8bc6503e874da6353a4f",
+        "parent_id": "64f9f1af500a756767921cfc",
+        "groups": null
+    },
+    {
+        "_id": "64f9f2e2500a756767921d00",
+        "name": "Over-Ear Headphones",
+        "level": 3,
+        "tree_id": "64ef8bc6503e874da6353a4f",
+        "parent_id": "64f9f1af500a756767921cfc",
+        "groups": null
+    },
+    {
+        "_id": "650b37adecb452a5dfe51c83",
+        "name": "Men's Fashion",
+        "level": 0,
+        "tree_id": "650b37adecb452a5dfe51c82",
+        "parent_id": null,
+        "groups": null
+    },
+    {
+        "_id": "650b3840ecb452a5dfe51c84",
+        "name": "Clothing",
+        "level": 1,
+        "tree_id": "650b37adecb452a5dfe51c82",
+        "parent_id": "650b37adecb452a5dfe51c83",
+        "groups": null
+    },
+    {
+        "_id": "650b38daecb452a5dfe51c85",
+        "name": "Shirts",
+        "level": 2,
+        "tree_id": "650b37adecb452a5dfe51c82",
+        "parent_id": "650b3840ecb452a5dfe51c84",
+        "groups": null
+    },
+    {
+        "_id": "650b3942ecb452a5dfe51c86",
+        "name": "T-Shirts",
+        "level": 3,
+        "tree_id": "650b37adecb452a5dfe51c82",
+        "parent_id": "650b38daecb452a5dfe51c85",
+        "groups": null
+    },
+    {
+        "_id": "65c7a14707524bd79fe2eb27",
+        "name": "Cell Phones & Accessories",
+        "groups": null,
+        "level": 1,
+        "tree_id": "64ef8bc6503e874da6353a4f",
+        "parent_id": "64d686ecc656f29009705340"
+    },
+    {
+        "_id": "65c7a20707524bd79fe2eb28",
+        "name": "Cell Phone Cases & Covers",
+        "groups": null,
+        "level": 2,
+        "tree_id": "64ef8bc6503e874da6353a4f",
+        "parent_id": "65c7a14707524bd79fe2eb27"
+    }
+]

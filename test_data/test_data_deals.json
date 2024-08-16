@@ -1,0 +1,145 @@
+[
+    {
+        "_id": "65ce773ec29c9d00197cddfd",
+        "name": "Dell Laptops With 16, 32, 64 GB of RAM And 512 GB, 1 TB Storage",
+        "is_visible": true,
+        "is_parent": false,
+        "parent_id": null,
+        "query": null,
+        "price_min": 1699.0,
+        "price_max": 3499.0,
+        "category_id": "64d6883fc656f29009705343",
+        "other_filters": [
+            {
+                "code": "brand",
+                "name": "Brand",
+                "value": "Dell",
+                "unit": null,
+                "type": "string"
+            },
+            {
+                "code": "ram",
+                "name": "RAM size",
+                "value": 16,
+                "unit": "GB",
+                "type": "integer"
+            },
+            {
+                "code": "ram",
+                "name": "RAM size",
+                "value": 32,
+                "unit": "GB",
+                "type": "integer"
+            },
+            {
+                "code": "ram",
+                "name": "RAM size",
+                "value": 64,
+                "unit": "GB",
+                "type": "integer"
+            },
+            {
+                "code": "storage",
+                "name": "Storage size",
+                "value": 512,
+                "unit": "GB",
+                "type": "integer"
+            },
+            {
+                "code": "storage",
+                "name": "Storage size",
+                "value": 1,
+                "unit": "TB",
+                "type": "integer"
+            },
+            {
+                "code": "storage",
+                "name": "Storage size",
+                "value": 2,
+                "unit": "TB",
+                "type": "integer"
+            }
+        ],
+        "query_string": "category=64d6883fc656f29009705343&minPrice=1699&maxPrice=3499&chosenFacets=eyJicmFuZCI6IHsiaXNfcmFuZ2UiOiBmYWxzZSwgInZhbHVlcyI6IFt7InZhbHVlIjogIkRlbGwiLCAidW5pdCI6IG51bGx9XX0sICJyYW0iOiB7ImlzX3JhbmdlIjogZmFsc2UsICJ2YWx1ZXMiOiBbeyJ2YWx1ZSI6IDE2LCAidW5pdCI6ICJHQiJ9LCB7InZhbHVlIjogMzIsICJ1bml0IjogIkdCIn0sIHsidmFsdWUiOiA2NCwgInVuaXQiOiAiR0IifV19LCAic3RvcmFnZSI6IHsiaXNfcmFuZ2UiOiBmYWxzZSwgInZhbHVlcyI6IFt7InZhbHVlIjogNTEyLCAidW5pdCI6ICJHQiJ9LCB7InZhbHVlIjogMSwgInVuaXQiOiAiVEIifSwgeyJ2YWx1ZSI6IDIsICJ1bml0IjogIlRCIn1dfX0%3D",
+        "created_at": "2024-02-15 20:42:38.388000",
+        "modified_at": "2024-04-17 21:38:15.740000",
+        "image": "https://testcdn.xxx/testDeal.jpeg",
+        "description": null,
+        "button_text": "Shop now"
+    },
+    {
+        "_id": "664b9ba5426ade4ffc86e68b",
+        "name": "Laptops for every need",
+        "is_visible": true,
+        "is_parent": false,
+        "parent_id": null,
+        "query": "laptops",
+        "price_min": null,
+        "price_max": null,
+        "category_id": "64d6883fc656f29009705343",
+        "other_filters": null,
+        "query_string": "q=laptops&category=64d6883fc656f29009705343",
+        "created_at": "2024-05-20 18:51:17.370000",
+        "modified_at": "2024-05-22 18:24:53.634000",
+        "image": "https://testcdn.xxx/testDeal.jpeg",
+        "description": null,
+        "button_text": "Find your laptop here"
+    },
+    {
+        "_id": "664b9e42426ade4ffc86e68c",
+        "name": "Play like a star this season",
+        "is_visible": true,
+        "is_parent": true,
+        "parent_id": null,
+        "created_at": "2024-05-20 19:02:26.586000",
+        "modified_at": "2024-05-22 18:24:26.272000",
+        "image": "https://testcdn.xxx/testDeal.jpeg",
+        "description": "We are calling all football fans!  Are you looking to represent your favorite team or player? Look no further!\nWe've got a wide selection of football jerseys at incredible prices. Browse jerseys from top brands like Nike, Adidas, New Balance, and more, featuring all the latest designs for your favorite clubs and international teams.",
+        "button_text": "See more"
+    },
+    {
+        "_id": "664b9f12426ade4ffc86e68d",
+        "name": "Football t-shirts by New Balance",
+        "is_visible": true,
+        "is_parent": false,
+        "parent_id": "664b9e42426ade4ffc86e68c",
+        "query": null,
+        "price_min": null,
+        "price_max": null,
+        "category_id": "650b3942ecb452a5dfe51c86",
+        "other_filters": [
+            {
+                "code": "brand",
+                "name": "Brand",
+                "value": "New Balance",
+                "unit": null,
+                "type": "string"
+            },
+            {
+                "code": "kind-of-sport",
+                "name": "Kind of sport",
+                "value": "Football",
+                "unit": null,
+                "type": "string"
+            }
+        ],
+        "query_string": "category=650b3942ecb452a5dfe51c86&chosenFacets=eyJicmFuZCI6IHsiaXNfcmFuZ2UiOiBmYWxzZSwgInZhbHVlcyI6IFt7InZhbHVlIjogIk5ldyBCYWxhbmNlIiwgInVuaXQiOiBudWxsfV19LCAia2luZC1vZi1zcG9ydCI6IHsiaXNfcmFuZ2UiOiBmYWxzZSwgInZhbHVlcyI6IFt7InZhbHVlIjogIkZvb3RiYWxsIiwgInVuaXQiOiBudWxsfV19fQ%3D%3D",
+        "created_at": "2024-05-20 19:05:54.826000",
+        "modified_at": "2024-05-21 18:00:39.023000",
+        "image": "https://testcdn.xxx/testDeal.jpeg",
+        "description": null,
+        "button_text": "Shop now"
+    },
+    {
+        "_id": "664e3b85193d79651b733094",
+        "name": "Amp Up Your Sound",
+        "is_visible": false,
+        "is_parent": true,
+        "parent_id": null,
+        "description": null,
+        "button_text": "Show more",
+        "created_at": "2024-05-22 18:37:57.250000",
+        "modified_at": "2024-05-22 18:37:57.250000",
+        "image": "https://testcdn.xxx/testDeal.jpeg"
+    }
+]

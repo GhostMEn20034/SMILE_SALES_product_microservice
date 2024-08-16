@@ -1,0 +1,933 @@
+[
+    {
+        "_id": "64d69161c656f29009705344",
+        "name": "Brand",
+        "categories": "*",
+        "type": "string",
+        "optional": false,
+        "show_in_filters": true,
+        "code": "brand",
+        "units": null,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "64d693a9c656f29009705346",
+        "code": "cpu-manufacturer",
+        "name": "Cpu Manufacturer",
+        "type": "string",
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "optional": true,
+        "show_in_filters": true,
+        "units": null,
+        "values": null,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "64d694dac656f29009705348",
+        "code": "cpu-cores-count",
+        "name": "Processor cores count",
+        "type": "integer",
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "optional": false,
+        "show_in_filters": true,
+        "units": null,
+        "values": null,
+        "explanation": "Processor cores are the brains of your computer, handling instructions and calculations. The more cores you have, the more tasks your computer can handle simultaneously. This can lead to smoother multitasking, faster performance for demanding applications, and a more responsive overall experience. Choose the core count that best suits your needs",
+        "is_range": false,
+        "range_values": null
+    },
+    {
+        "_id": "64d697bfc656f2900970534a",
+        "code": "display-size",
+        "name": "Laptop Display Size",
+        "type": "decimal",
+        "categories": [
+            "64d6883fc656f29009705343",
+            "65c7a20707524bd79fe2eb28"
+        ],
+        "optional": false,
+        "show_in_filters": true,
+        "units": [
+            "Inches"
+        ],
+        "values": null,
+        "explanation": null,
+        "is_range": true,
+        "range_values": [
+            {
+                "gteq": 0,
+                "ltn": 11,
+                "display_name": "11 Inches & Under"
+            },
+            {
+                "gteq": 11,
+                "ltn": 12,
+                "display_name": "11 to 11.9 Inches"
+            },
+            {
+                "gteq": 12,
+                "ltn": 13,
+                "display_name": "12 to 12.9 Inches"
+            },
+            {
+                "gteq": 13,
+                "ltn": 14.2,
+                "display_name": "13 to 14.1 Inches"
+            },
+            {
+                "gteq": 14.2,
+                "ltn": 15.6,
+                "display_name": "14.2 to 15.5 Inches"
+            },
+            {
+                "gteq": 15.6,
+                "ltn": 16.2,
+                "display_name": "15.6 to 16.1 Inches"
+            },
+            {
+                "gteq": 16.2,
+                "ltn": 17,
+                "display_name": "16.2 to 16.9 Inches"
+            },
+            {
+                "gteq": 17,
+                "ltn": null,
+                "display_name": "17 Inches & Above"
+            }
+        ]
+    },
+    {
+        "_id": "64d699b1c656f2900970534d",
+        "code": "cpu-family",
+        "name": "CPU Family",
+        "type": "string",
+        "values": [
+            "AMD Athlon",
+            "AMD Ryzen 3",
+            "AMD Ryzen 5",
+            "AMD Ryzen 7",
+            "AMD Ryzen 9",
+            "Apple M",
+            "Intel core i3",
+            "Intel core i5",
+            "Intel core i7",
+            "Intel core i9",
+            "Intel celeron",
+            "Intel Core Ultra 5",
+            "Intel Core Ultra 7",
+            "Intel Core Ultra 9",
+            "Qualcomm X"
+        ],
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "optional": true,
+        "show_in_filters": true,
+        "units": null,
+        "explanation": null,
+        "is_range": false,
+        "range_values": null
+    },
+    {
+        "_id": "64d69bf1c656f2900970534e",
+        "code": "dispay-type",
+        "name": "Display type",
+        "type": "string",
+        "values": [
+            "LCD",
+            "OLED",
+            "AMOLED",
+            "Mini LED",
+            "TN"
+        ],
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "optional": false,
+        "show_in_filters": true,
+        "units": null,
+        "explanation": "In the multifaceted realm of digital interfaces, the display type stands as the cornerstone of visual interaction. It forms the very canvas upon which pixels dance, coalescing into vibrant landscapes, intricate spreadsheets, and spellbinding narratives.<br />\nChoosing the appropriate display type, therefore, becomes not merely a technical consideration, but a deliberate act of crafting the ideal platform for your digital journey.",
+        "is_range": false
+    },
+    {
+        "_id": "64d69d45c656f2900970534f",
+        "code": "gpu-type",
+        "name": "Graphics type",
+        "type": "string",
+        "values": [
+            "Dedicated",
+            "Integrated",
+            "Hybryd"
+        ],
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "optional": true,
+        "show_in_filters": true,
+        "units": null,
+        "explanation": "The graphics type determines how images and videos are processed and displayed. Choosing the right one depends on your intended usage and desired visual experience. Here's a breakdown of common graphics types:\n<ul>\n<li>\n<b>Integrated Graphics</b> - Built-in to the processor, making laptops thinner and lighter, often at the expense of performance. Suitable for basic tasks like web browsing, document editing, and casual video streaming.\n</li>\n<li>\n<b>Dedicated Graphics</b> - A separate graphics processing unit (GPU) provides significantly more power than integrated graphics. Ideal for users who need smooth performance for gaming, professional graphics editing, video editing, and VR applications.\n</li>\n<li>\n<b>Hybrid Graphics</b> - Most often used in laptops. Combines both integrated and dedicated graphics cards, automatically switching between them based on application demands. Offers a balance between performance and battery life.\n</li>\n</ul>",
+        "is_range": false
+    },
+    {
+        "_id": "64d69fd8c656f29009705351",
+        "code": "ram",
+        "name": "RAM size",
+        "type": "integer",
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "optional": false,
+        "show_in_filters": true,
+        "values": null,
+        "units": [
+            "MB",
+            "GB",
+            "TB"
+        ],
+        "explanation": "RAM (Random Access Memory) acts like your workspace, serving as a temporary storage area for data currently being used by the operating system and running applications. The larger your RAM size, the smoother and faster your computer will perform, especially when multitasking or handling demanding tasks.",
+        "is_range": false
+    },
+    {
+        "_id": "64d6a044c656f29009705352",
+        "code": "storage",
+        "name": "Storage size",
+        "type": "integer",
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "optional": false,
+        "show_in_filters": true,
+        "units": [
+            "MB",
+            "GB",
+            "TB"
+        ],
+        "values": null,
+        "explanation": "In the digital age, your device is your portal to an ocean of information and entertainment. But just like a beach vacation, you need enough space to pack all your essentials \u2013 without it, you'll be left wanting more. That's where storage size comes in, acting as the beach bag for your virtual files and programs.<br />\nSo, how much storage do you actually need? It's like choosing the perfect beach bag \u2013 too small, and you'll overflow with towels and souvenirs; too big, and you'll lug around an unnecessary burden. Here's a breakdown of common storage sizes and their implications:\n<ul>\n<li>\n<b>128GB - 256GB:</b> The beach backpackers. Suitable for basic users who primarily browse the web, work with documents, and stream occasional videos. Enough for essential programs and light photo storage.\n</li>\n<li>\n<b>512GB - 1TB:</b> The beach tote bags. Ideal for everyday users who download movies, edit photos, and play some casual games. Provides ample space for most tasks and growing digital portfolios.\n</li>\n<b>2TB and above:</b> The beach vacation trunks. For power users, gamers, creatives, and data hoarders. Offers abundant space for large game libraries, high-resolution photos and videos, and extensive software collections.\n</li>\n</ul>",
+        "is_range": false
+    },
+    {
+        "_id": "64d6a07f0e3d5de60814155d",
+        "code": "ram-technology",
+        "name": "RAM technology",
+        "type": "string",
+        "values": [
+            "DDR3",
+            "DDR4",
+            "LPDDR4",
+            "LPDDR4X",
+            "DDR5",
+            "LPDDR5",
+            "LPDDR5X"
+        ],
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "optional": true,
+        "show_in_filters": true,
+        "units": null,
+        "explanation": "While RAM size determines how much temporary workspace your laptop has, RAM technology defines the speed and efficiency of that workspace. Understanding the different RAM technologies can help you choose the optimal configuration for your needs.",
+        "is_range": false
+    },
+    {
+        "_id": "64d6a21c0e3d5de60814155f",
+        "code": "cpu",
+        "name": "CPU name",
+        "type": "string",
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "optional": false,
+        "show_in_filters": true,
+        "units": null,
+        "values": null,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "64d6a2f40e3d5de608141560",
+        "code": "gpu",
+        "name": "Graphics Coprocessor",
+        "type": "string",
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "optional": true,
+        "show_in_filters": true,
+        "units": null,
+        "values": null,
+        "explanation": "A graphics coprocessor, often shortened to GPU, is a dedicated chip within your computer specifically designed to handle graphics processing. Think of it as a muscle car for your visual tasks, compared to the integrated graphics processing being the family sedan.<br />\nBut why is having a separate graphics coprocessor important? Imagine trying to render a complex 3D game or edit a high-resolution video with the family sedan. It might chug along, but the experience won't be smooth or enjoyable",
+        "is_range": false
+    },
+    {
+        "_id": "64d6a3330e3d5de608141561",
+        "code": "display-resolution",
+        "name": "Display resolution",
+        "type": "bivariate",
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "optional": false,
+        "show_in_filters": true,
+        "units": [
+            "Pixels"
+        ],
+        "values": null,
+        "explanation": "Picture this: you're watching a movie on your screen, but the details are blurry, the text jagged, and the overall experience leaves you squinting. Display resolution it's like choosing between a high-resolution telescope and a foggy pair of glasses for your digital world.<br />\nSo, what exactly is display resolution? It's the number of pixels that make up your laptop screen, dictating the sharpness and detail of everything you see. More pixels, like bigger pixels on a telescope mirror, reveal more intricate details and create a smoother, more natural viewing experience.",
+        "is_range": false
+    },
+    {
+        "_id": "651305a6e45a7ec4c5f22a49",
+        "code": "series",
+        "name": "Series",
+        "type": "string",
+        "values": null,
+        "categories": "*",
+        "units": null,
+        "optional": true,
+        "show_in_filters": false,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "6513076ce45a7ec4c5f22a4a",
+        "code": "wi-fi-version",
+        "name": "Wi-Fi Version",
+        "type": "string",
+        "values": null,
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "6513078ee45a7ec4c5f22a4b",
+        "code": "bluetooth-version",
+        "name": "Bluetooth Version",
+        "type": "string",
+        "values": null,
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "651308dce45a7ec4c5f22a4d",
+        "code": "color",
+        "name": "Color",
+        "type": "string",
+        "values": null,
+        "categories": "*",
+        "units": null,
+        "optional": true,
+        "show_in_filters": false,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "65171e527fc11aeb8af2b0f6",
+        "code": "os",
+        "name": "Operating System",
+        "type": "string",
+        "values": null,
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "654d35583ead124c7cf0b808",
+        "code": "materials",
+        "name": "Materials",
+        "type": "list",
+        "values": null,
+        "categories": [
+            "650b3942ecb452a5dfe51c86",
+            "65c7a20707524bd79fe2eb28"
+        ],
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "65983f9e6d5ab0aac65448e4",
+        "code": "connectivity-type",
+        "name": "Connectivity Type",
+        "type": "string",
+        "values": [
+            "Wired",
+            "Wireless",
+            "Wired/Wireless (Hybrid)"
+        ],
+        "categories": [
+            "64f9f1d6500a756767921cfd",
+            "64f9f217500a756767921cfe",
+            "64f9f24e500a756767921cff",
+            "64f9f2e2500a756767921d00",
+            "64f9f1af500a756767921cfc"
+        ],
+        "units": null,
+        "optional": false,
+        "show_in_filters": true,
+        "explanation": "Connectivity type refers to the method by which headphones transmit audio signals to your device. \nThis can be through a physical cable connection (wired) or wirelessly using technologies like Bluetooth or radio frequencies.",
+        "is_range": false
+    },
+    {
+        "_id": "6598474e6d5ab0aac65448e5",
+        "code": "connection-interface",
+        "name": "Connection Interface",
+        "type": "list",
+        "values": null,
+        "categories": [
+            "64f9f2e2500a756767921d00",
+            "64f9f24e500a756767921cff",
+            "64f9f1d6500a756767921cfd",
+            "64f9f217500a756767921cfe",
+            "64f9f1af500a756767921cfc"
+        ],
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "explanation": "Connection Interfaces describe the various ways that a pair of headphones can connect to an audio source. Headphones without connectivity don\u2019t serve very many purposes besides noise isolation. Some sort of connection is required to transmit audio data to the headphones so they can create sound.",
+        "is_range": false
+    },
+    {
+        "_id": "659849b96d5ab0aac65448e6",
+        "code": "noise-control",
+        "name": "Noise Control",
+        "type": "string",
+        "values": [
+            "Active Noise Cancellation",
+            "None"
+        ],
+        "categories": [
+            "64f9f1af500a756767921cfc",
+            "64f9f1d6500a756767921cfd",
+            "64f9f217500a756767921cfe",
+            "64f9f24e500a756767921cff",
+            "64f9f2e2500a756767921d00"
+        ],
+        "units": null,
+        "optional": false,
+        "show_in_filters": true,
+        "explanation": "Imagine a world where the rumble of traffic melts away, leaving only the soothing melody of your own music. That's the power of noise cancellation (NC). But with different levels and technologies, choosing the right one can be tricky. Let's break it down:<br />\n<b>Types of NC:</b>\n<ul>\n<b>Passive:</b> Physical barriers like thick ear cups block ambient noise. Good for constant sounds like airplanes, less effective for dynamic noise like conversations.\n</ul>\n<ul>\n<b>Active:</b> Generates sound waves to \"cancel out\" external noise. Effective for a wider range of sounds, but requires power and can have limitations.\n</ul>",
+        "is_range": false
+    },
+    {
+        "_id": "65984a896d5ab0aac65448e7",
+        "code": "headphone-features",
+        "name": "Headphone Features",
+        "type": "list",
+        "values": null,
+        "categories": [
+            "64f9f2e2500a756767921d00",
+            "64f9f24e500a756767921cff",
+            "64f9f217500a756767921cfe",
+            "64f9f1d6500a756767921cfd",
+            "64f9f1af500a756767921cfc"
+        ],
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "6598500e6d5ab0aac65448e8",
+        "code": "microphone",
+        "name": "Microphone",
+        "type": "string",
+        "values": null,
+        "categories": [
+            "64f9f1af500a756767921cfc",
+            "64f9f1d6500a756767921cfd",
+            "64f9f217500a756767921cfe",
+            "64f9f24e500a756767921cff",
+            "64f9f2e2500a756767921d00"
+        ],
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "65986571faf62d708647ef82",
+        "code": "pattern",
+        "name": "Pattern",
+        "type": "string",
+        "values": null,
+        "categories": [
+            "650b3942ecb452a5dfe51c86",
+            "65c7a20707524bd79fe2eb28"
+        ],
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "659868815946216008bf8e2b",
+        "code": "sleeve-length",
+        "name": "Sleeve Length",
+        "type": "string",
+        "values": [
+            "Long Sleeve",
+            "3/4 Sleeve",
+            "Half Sleeve",
+            "Short Sleeve",
+            "Sleeveless"
+        ],
+        "categories": [
+            "650b3942ecb452a5dfe51c86"
+        ],
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "65986ab45946216008bf8e2d",
+        "code": "care-instructions",
+        "name": "Care Instructions",
+        "type": "string",
+        "values": [
+            "Dry Clean Only",
+            "Hand Wash Only",
+            "Machine Wash"
+        ],
+        "categories": [
+            "650b3942ecb452a5dfe51c86",
+            "650b38daecb452a5dfe51c85",
+            "650b3840ecb452a5dfe51c84",
+            "650b37adecb452a5dfe51c83"
+        ],
+        "units": null,
+        "optional": false,
+        "show_in_filters": true,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "65987072ab9bb3662b5b46d8",
+        "code": "occasion",
+        "name": "Occasion",
+        "type": "string",
+        "values": null,
+        "categories": [
+            "650b3840ecb452a5dfe51c84",
+            "650b37adecb452a5dfe51c83",
+            "650b3942ecb452a5dfe51c86",
+            "650b38daecb452a5dfe51c85"
+        ],
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "659c68a0b629113af03f1fc7",
+        "code": "shirt-size-eu",
+        "name": "Shirt Size (EU)",
+        "type": "string",
+        "values": [
+            "XXXS",
+            "XXS",
+            "XS",
+            "S",
+            "M",
+            "L",
+            "1X",
+            "XL",
+            "XXL",
+            "3 XL",
+            "4 XL",
+            "5 XL",
+            "6 XL"
+        ],
+        "categories": [
+            "650b3942ecb452a5dfe51c86",
+            "650b38daecb452a5dfe51c85",
+            "650b3840ecb452a5dfe51c84",
+            "650b37adecb452a5dfe51c83"
+        ],
+        "units": null,
+        "optional": false,
+        "show_in_filters": true,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "659c7372b629113af03f1fc8",
+        "code": "closure-type",
+        "name": "Closure Type",
+        "type": "string",
+        "values": [
+            "Button",
+            "Snap",
+            "Zipper",
+            "Buckle",
+            "Double Ring",
+            "Pull On",
+            "Drawstring",
+            "Hook And Eye",
+            "Hook And Loop",
+            "Magnetic"
+        ],
+        "categories": [
+            "650b3942ecb452a5dfe51c86",
+            "650b38daecb452a5dfe51c85",
+            "650b3840ecb452a5dfe51c84",
+            "650b37adecb452a5dfe51c83"
+        ],
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "explanation": null,
+        "is_range": false
+    },
+    {
+        "_id": "65c7a4df07524bd79fe2eb2a",
+        "code": "case-finish-type",
+        "name": "Case Finish Type",
+        "type": "string",
+        "values": [
+            "Glossy",
+            "Matte",
+            "Soft touch",
+            "Metallic"
+        ],
+        "categories": [
+            "65c7a20707524bd79fe2eb28"
+        ],
+        "explanation": "Texture and appearance of the case's outer surface. It plays a role in both the aesthetics and functionality of the case.",
+        "units": null,
+        "optional": false,
+        "show_in_filters": true,
+        "is_range": false
+    },
+    {
+        "_id": "65c7a50007524bd79fe2eb2b",
+        "code": "theme",
+        "name": "Theme",
+        "type": "string",
+        "values": null,
+        "categories": [
+            "65c7a20707524bd79fe2eb28"
+        ],
+        "explanation": null,
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "is_range": false
+    },
+    {
+        "_id": "65c7a74307524bd79fe2eb2c",
+        "code": "embellishment",
+        "name": "Embellishment",
+        "type": "string",
+        "values": null,
+        "categories": [
+            "65c7a20707524bd79fe2eb28"
+        ],
+        "explanation": null,
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "is_range": false
+    },
+    {
+        "_id": "65c7a7fb07524bd79fe2eb2d",
+        "code": "compatible-phone-model",
+        "name": "Compatible Phone Model",
+        "type": "string",
+        "values": null,
+        "categories": [
+            "65c7a20707524bd79fe2eb28"
+        ],
+        "explanation": null,
+        "units": null,
+        "optional": false,
+        "show_in_filters": true,
+        "is_range": false
+    },
+    {
+        "_id": "65c7a9db07524bd79fe2eb2f",
+        "code": "case-form-factor",
+        "name": "Case Form Factor",
+        "type": "string",
+        "values": null,
+        "categories": [
+            "65c7a20707524bd79fe2eb28"
+        ],
+        "explanation": null,
+        "units": null,
+        "optional": true,
+        "show_in_filters": false,
+        "is_range": false
+    },
+    {
+        "_id": "65dcb231c815997c397226e7",
+        "code": "features",
+        "name": "Features",
+        "type": "list",
+        "values": null,
+        "categories": "*",
+        "explanation": null,
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "is_range": false
+    },
+    {
+        "_id": "664b581e747dec49277751cd",
+        "code": "display-refresh-rate",
+        "name": "Display Refresh Rate",
+        "type": "decimal",
+        "values": null,
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "explanation": null,
+        "units": [
+            "Hz"
+        ],
+        "optional": false,
+        "show_in_filters": true,
+        "is_range": true,
+        "range_values": [
+            {
+                "gteq": 0.0,
+                "ltn": 60.0,
+                "display_name": "Up to 59.99 Hz"
+            },
+            {
+                "gteq": 60.0,
+                "ltn": 90.0,
+                "display_name": "60 to 89.99 Hz"
+            },
+            {
+                "gteq": 90.0,
+                "ltn": 120.0,
+                "display_name": "90 to 119.99 Hz"
+            },
+            {
+                "gteq": 120.0,
+                "ltn": null,
+                "display_name": "120 Hz & Above"
+            }
+        ]
+    },
+    {
+        "_id": "664b58d5747dec49277751ce",
+        "code": "storage-type",
+        "name": "Storage Type",
+        "type": "string",
+        "values": [
+            "HDD",
+            "SSD",
+            "Hybrid (HHDD/SSHD)"
+        ],
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "explanation": null,
+        "units": null,
+        "optional": false,
+        "show_in_filters": true,
+        "is_range": false,
+        "range_values": null
+    },
+    {
+        "_id": "664b5c2e747dec49277751cf",
+        "code": "laptop-battery-life",
+        "name": "Laptop Battery Life",
+        "type": "integer",
+        "values": null,
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "explanation": null,
+        "units": [
+            "Hours"
+        ],
+        "optional": true,
+        "show_in_filters": true,
+        "is_range": true,
+        "range_values": [
+            {
+                "gteq": 0.0,
+                "ltn": 4.0,
+                "display_name": "Up to 4 Hours"
+            },
+            {
+                "gteq": 4.0,
+                "ltn": 7.0,
+                "display_name": "4 to 7 Hours"
+            },
+            {
+                "gteq": 7.0,
+                "ltn": 10.0,
+                "display_name": "7 to 10 Hours"
+            },
+            {
+                "gteq": 10.0,
+                "ltn": 12.0,
+                "display_name": "10 to 12 Hours"
+            },
+            {
+                "gteq": 12.0,
+                "ltn": null,
+                "display_name": "12 Hours & Above"
+            }
+        ]
+    },
+    {
+        "_id": "664b5fc0747dec49277751d0",
+        "code": "laptop-gpu-mem",
+        "name": "Laptop Dedicated Graphics Memory",
+        "type": "integer",
+        "values": null,
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "explanation": null,
+        "units": [
+            "GB"
+        ],
+        "optional": true,
+        "show_in_filters": true,
+        "is_range": true,
+        "range_values": [
+            {
+                "gteq": 0.0,
+                "ltn": 1.0,
+                "display_name": "Up to 1 GB"
+            },
+            {
+                "gteq": 1.0,
+                "ltn": 3.0,
+                "display_name": "1 to 3 GB"
+            },
+            {
+                "gteq": 3.0,
+                "ltn": 6.0,
+                "display_name": "3 to 6 GB"
+            },
+            {
+                "gteq": 6.0,
+                "ltn": 8.0,
+                "display_name": "6 to 8 GB"
+            },
+            {
+                "gteq": 8.0,
+                "ltn": null,
+                "display_name": "8 GB & Above"
+            }
+        ]
+    },
+    {
+        "_id": "664b63e4747dec49277751d1",
+        "code": "laptop-cpu-freq",
+        "name": "Laptop CPU Frequency",
+        "type": "decimal",
+        "values": null,
+        "categories": [
+            "64d6883fc656f29009705343"
+        ],
+        "explanation": null,
+        "units": [
+            "GHz"
+        ],
+        "optional": true,
+        "show_in_filters": true,
+        "is_range": true,
+        "range_values": [
+            {
+                "gteq": 1.0,
+                "ltn": 1.6,
+                "display_name": "1 to 1.59 GHz"
+            },
+            {
+                "gteq": 1.6,
+                "ltn": 2.0,
+                "display_name": "1.6 to 1.99 GHz"
+            },
+            {
+                "gteq": 2.0,
+                "ltn": 2.5,
+                "display_name": "2 to 2.49 GHz"
+            },
+            {
+                "gteq": 2.5,
+                "ltn": 3.0,
+                "display_name": "2.5 to 2.99 GHz"
+            },
+            {
+                "gteq": 3.0,
+                "ltn": 3.5,
+                "display_name": "3 to 3.49 GHz"
+            },
+            {
+                "gteq": 3.5,
+                "ltn": 4.0,
+                "display_name": "3.5 to 3.99 GHz"
+            },
+            {
+                "gteq": 4.0,
+                "ltn": null,
+                "display_name": "4 GHz & Above"
+            }
+        ]
+    },
+    {
+        "_id": "664ce0bd42574bed09078cb1",
+        "code": "kind-of-sport",
+        "name": "Kind of sport",
+        "type": "string",
+        "values": [
+            "Football",
+            "Basketball",
+            "Hockey",
+            "American football",
+            "Rugby",
+            "Volleyball",
+            "Baseball",
+            "Handball",
+            "Cricket",
+            "Futsal"
+        ],
+        "categories": [
+            "650b3942ecb452a5dfe51c86"
+        ],
+        "explanation": null,
+        "units": null,
+        "optional": true,
+        "show_in_filters": true,
+        "is_range": false,
+        "range_values": null
+    }
+]
