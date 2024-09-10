@@ -57,31 +57,31 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ env.GCP_PROJECT_ID }}
+          project_id: ${{ vars.GCP_PROJECT_ID }}
 
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v2'
 
       - name: Configure Docker
         run: |
-          gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev
+          gcloud auth configure-docker ${{ vars.GCP_REGION }}-docker.pkg.dev
 
       # Build Docker image
       - name: Build Docker image
         run: |
-          docker build -f DockerfileProd -t ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REPOSITORY }}/${{ env.IMAGE_NAME }} .
+          docker build -f DockerfileProd -t ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REPOSITORY }}/${{ vars.IMAGE_NAME }} .
 
       # Push Docker image to Artifact Registry
       - name: Push Docker image to Artifact Registry
         run: |
-          docker push ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REPOSITORY }}/${{ env.IMAGE_NAME }}
+          docker push ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REPOSITORY }}/${{ vars.IMAGE_NAME }}
 
       # Deploy to Cloud Run
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy smile-sales-api-products \
-            --image=${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REPOSITORY }}/${{ env.IMAGE_NAME }} \
-            --region=${{ env.GCP_REGION }} \
+            --image=${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REPOSITORY }}/${{ vars.IMAGE_NAME }} \
+            --region=${{ vars.GCP_REGION }} \
             --platform=managed \
             --allow-unauthenticated \
             --port=8000 \
