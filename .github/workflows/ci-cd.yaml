@@ -1,4 +1,4 @@
-name: Test
+name: 'CI/CD for testing the app and deploy it on Google Cloud'
 
 on:
   push:
@@ -31,7 +31,9 @@ jobs:
       - name: Export environment variables from secrets
         run: |
           echo "Exporting ENV_VARS_TEST secret as environment variables"
-          export $(echo "${{ secrets.ENV_VARS_TEST }}" | tr ',' ' ')
+          for var in $(echo "${{ secrets.ENV_VARS_TEST }}" | tr ',' ' '); do
+            echo "$var" >> $GITHUB_ENV
+          done
 
       # Run tests
       - name: Run tests
@@ -54,7 +56,7 @@ jobs:
         name: 'Google Cloud Auth'
         uses: 'google-github-actions/auth@v2'
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: 'Set up Cloud SDK'
